@@ -15,7 +15,7 @@ public class Licencia {
     @Column(name = "numero_licencia", nullable = false, unique = true, length = 50)
     private String numeroLicencia;
 
-    @Column(name = "categoria_licencia", nullable = false, length = 20)
+    @Column(name = "categoria_licencia", nullable = false, length = 5)
     private String categoriaLicencia;
 
     @Column(name = "fecha_expedicion", nullable = false)
