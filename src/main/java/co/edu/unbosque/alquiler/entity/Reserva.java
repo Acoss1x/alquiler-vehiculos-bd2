@@ -4,11 +4,14 @@ import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 /**
  * Entidad transaccional central del sistema.
- * Conecta al cliente, el vehículo, las sedes de entrega/recibida y los pagos.
+ * Conecta al cliente, el vehículo, el asesor que la registra, las sedes de
+ * entrega/recibo y los pagos.
  */
 @Entity
 @Table(name = "RESERVA")
@@ -31,6 +34,9 @@ public class Reserva {
     @Column(name = "fecha_fin", nullable = false)
     private LocalDate fechaFin;
 
+    /**
+     * Precio pactado al momento de crear la reserva (se conserva como histórico).
+     */
     @Column(name = "costo_total", precision = 10, scale = 2)
     private BigDecimal costoTotal;
 
@@ -42,16 +48,27 @@ public class Reserva {
     @JoinColumn(name = "VEHICULO_id_vehiculo", nullable = false)
     private Vehiculo vehiculo;
 
+    /**
+     * Asesor que registra y atiende la reserva (obligatorio).
+     */
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "SEDE_id_sede", nullable = false)
+    @JoinColumn(name = "ASESOR_id_empleado", nullable = false)
+    private Asesor asesor;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "sede_entrega", nullable = false)
     private Sede sedeEntrega;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "SEDE_id_sede2", nullable = false)
+    @JoinColumn(name = "sede_recibe", nullable = false)
     private Sede sedeRecibe;
 
-    @OneToOne(mappedBy = "reserva", fetch = FetchType.LAZY)
-    private Pago pago;
+    /**
+     * Pagos de la reserva. Se registran vía procedimiento almacenado, por eso
+     * no hay cascada desde aquí.
+     */
+    @OneToMany(mappedBy = "reserva", fetch = FetchType.LAZY)
+    private List<Pago> pagos = new ArrayList<>();
 
     public Reserva() {}
 
@@ -79,14 +96,17 @@ public class Reserva {
     public Vehiculo getVehiculo() { return vehiculo; }
     public void setVehiculo(Vehiculo vehiculo) { this.vehiculo = vehiculo; }
 
+    public Asesor getAsesor() { return asesor; }
+    public void setAsesor(Asesor asesor) { this.asesor = asesor; }
+
     public Sede getSedeEntrega() { return sedeEntrega; }
     public void setSedeEntrega(Sede sedeEntrega) { this.sedeEntrega = sedeEntrega; }
 
     public Sede getSedeRecibe() { return sedeRecibe; }
     public void setSedeRecibe(Sede sedeRecibe) { this.sedeRecibe = sedeRecibe; }
 
-    public Pago getPago() { return pago; }
-    public void setPago(Pago pago) { this.pago = pago; }
+    public List<Pago> getPagos() { return pagos; }
+    public void setPagos(List<Pago> pagos) { this.pagos = pagos; }
 
     @Override
     public boolean equals(Object o) {

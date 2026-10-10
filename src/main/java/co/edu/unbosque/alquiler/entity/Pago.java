@@ -5,6 +5,9 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Objects;
 
+/**
+ * Pago asociado a una reserva. Una reserva puede tener varios pagos (abono, saldo).
+ */
 @Entity
 @Table(name = "PAGO")
 public class Pago {
@@ -26,8 +29,8 @@ public class Pago {
     @Column(name = "estado_pago", nullable = false, length = 20)
     private String estadoPago;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "RESERVA_id_reserva", nullable = false, unique = true)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "RESERVA_id_reserva", nullable = false)
     private Reserva reserva;
 
     public Pago() {}

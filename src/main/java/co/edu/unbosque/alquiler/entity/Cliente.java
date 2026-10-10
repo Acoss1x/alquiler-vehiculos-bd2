@@ -1,7 +1,6 @@
 package co.edu.unbosque.alquiler.entity;
 
 import jakarta.persistence.*;
-import java.time.LocalDate;
 import java.util.Objects;
 
 /**
@@ -9,7 +8,7 @@ import java.util.Objects;
  * <p>
  * Se mapea a la tabla {@code CLIENTE} en la base de datos relacional.
  * Su función principal en la aplicación web es facilitar las consultas (SELECT),
- * mientras que las transacciones críticas se delegarán a procedimientos almacenados.
+ * mientras que las transacciones críticas se delegan a procedimientos almacenados.
  * </p>
  */
 @Entity
@@ -30,35 +29,32 @@ public class Cliente {
     @Column(name = "numero_documento", nullable = false, unique = true, length = 20)
     private String numeroDocumento;
 
-    /**
-     * Primer nombre del cliente.
-     */
     @Column(name = "primer_nombre", nullable = false, length = 50)
     private String primerNombre;
 
-    /**
-     * Primer apellido del cliente.
-     */
+    @Column(name = "segundo_nombre", length = 50)
+    private String segundoNombre;
+
     @Column(name = "primer_apellido", nullable = false, length = 50)
     private String primerApellido;
 
-    /**
-     * Dirección de correo electrónico de contacto.
-     */
-    @Column(name = "correo", nullable = false, length = 100)
-    private String correo;
+    @Column(name = "segundo_apellido", length = 50)
+    private String segundoApellido;
 
     /**
-     * Número de teléfono de contacto.
+     * Correo electrónico de contacto. Único por cliente.
      */
-    @Column(name = "telefono", length = 15)
+    @Column(name = "correo", nullable = false, unique = true, length = 100)
+    private String correo;
+
+    @Column(name = "telefono", length = 20)
     private String telefono;
 
     /**
-     * Fecha en la que el cliente fue registrado en el sistema.
+     * Estado del cliente (por ejemplo, ACTIVO / INACTIVO).
      */
-    @Column(name = "fecha_registro")
-    private LocalDate fechaRegistro = LocalDate.now();
+    @Column(name = "estado", nullable = false, length = 15)
+    private String estado;
 
     /**
      * Constructor por defecto requerido por JPA.
@@ -66,61 +62,32 @@ public class Cliente {
     public Cliente() {
     }
 
-    public Long getIdCliente() {
-        return idCliente;
-    }
+    public Long getIdCliente() { return idCliente; }
+    public void setIdCliente(Long idCliente) { this.idCliente = idCliente; }
 
-    public void setIdCliente(Long idCliente) {
-        this.idCliente = idCliente;
-    }
+    public String getNumeroDocumento() { return numeroDocumento; }
+    public void setNumeroDocumento(String numeroDocumento) { this.numeroDocumento = numeroDocumento; }
 
-    public String getNumeroDocumento() {
-        return numeroDocumento;
-    }
+    public String getPrimerNombre() { return primerNombre; }
+    public void setPrimerNombre(String primerNombre) { this.primerNombre = primerNombre; }
 
-    public void setNumeroDocumento(String numeroDocumento) {
-        this.numeroDocumento = numeroDocumento;
-    }
+    public String getSegundoNombre() { return segundoNombre; }
+    public void setSegundoNombre(String segundoNombre) { this.segundoNombre = segundoNombre; }
 
-    public String getPrimerNombre() {
-        return primerNombre;
-    }
+    public String getPrimerApellido() { return primerApellido; }
+    public void setPrimerApellido(String primerApellido) { this.primerApellido = primerApellido; }
 
-    public void setPrimerNombre(String primerNombre) {
-        this.primerNombre = primerNombre;
-    }
+    public String getSegundoApellido() { return segundoApellido; }
+    public void setSegundoApellido(String segundoApellido) { this.segundoApellido = segundoApellido; }
 
-    public String getPrimerApellido() {
-        return primerApellido;
-    }
+    public String getCorreo() { return correo; }
+    public void setCorreo(String correo) { this.correo = correo; }
 
-    public void setPrimerApellido(String primerApellido) {
-        this.primerApellido = primerApellido;
-    }
+    public String getTelefono() { return telefono; }
+    public void setTelefono(String telefono) { this.telefono = telefono; }
 
-    public String getCorreo() {
-        return correo;
-    }
-
-    public void setCorreo(String correo) {
-        this.correo = correo;
-    }
-
-    public String getTelefono() {
-        return telefono;
-    }
-
-    public void setTelefono(String telefono) {
-        this.telefono = telefono;
-    }
-
-    public LocalDate getFechaRegistro() {
-        return fechaRegistro;
-    }
-
-    public void setFechaRegistro(LocalDate fechaRegistro) {
-        this.fechaRegistro = fechaRegistro;
-    }
+    public String getEstado() { return estado; }
+    public void setEstado(String estado) { this.estado = estado; }
 
     @Override
     public boolean equals(Object o) {
