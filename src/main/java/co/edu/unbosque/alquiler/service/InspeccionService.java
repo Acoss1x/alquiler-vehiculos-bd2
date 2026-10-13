@@ -5,11 +5,7 @@ import co.edu.unbosque.alquiler.document.PiezaCambiada;
 import co.edu.unbosque.alquiler.dto.CostoMantenimientoResponse;
 import co.edu.unbosque.alquiler.dto.InspeccionRequest;
 import co.edu.unbosque.alquiler.dto.InspeccionResponse;
-<<<<<<< HEAD
 import co.edu.unbosque.alquiler.dto.PiezaDTO;
-=======
-import co.edu.unbosque.alquiler.dto.PiezaDto;
->>>>>>> ab8d144af1469c2acbe5d1a01122134522070012
 import co.edu.unbosque.alquiler.entity.EstadoVehiculo;
 import co.edu.unbosque.alquiler.exception.RecursoNoEncontradoException;
 import co.edu.unbosque.alquiler.repository.InspeccionConsultasRepository;
@@ -116,13 +112,8 @@ public class InspeccionService {
     }
 
     private InspeccionResponse aRespuesta(InspeccionVehiculo i) {
-<<<<<<< HEAD
         List<PiezaDTO> piezas = i.getPiezasCambiadas().stream()
                 .map(p -> new PiezaDTO(p.getNombre(), p.getCantidad(), p.getCosto()))
-=======
-        List<PiezaDto> piezas = i.getPiezasCambiadas().stream()
-                .map(p -> new PiezaDto(p.getNombre(), p.getCantidad(), p.getCosto()))
->>>>>>> ab8d144af1469c2acbe5d1a01122134522070012
                 .toList();
         return new InspeccionResponse(
                 i.getIdInspeccion(),
