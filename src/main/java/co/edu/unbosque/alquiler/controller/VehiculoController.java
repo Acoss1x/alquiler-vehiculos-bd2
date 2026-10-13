@@ -1,11 +1,19 @@
 package co.edu.unbosque.alquiler.controller;
 
+import co.edu.unbosque.alquiler.dto.VehiculoEstadoRequest;
+import co.edu.unbosque.alquiler.dto.VehiculoRequest;
+import co.edu.unbosque.alquiler.dto.VehiculoResponse;
+import co.edu.unbosque.alquiler.entity.EstadoVehiculo;
 import co.edu.unbosque.alquiler.service.VehiculoService;
+import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import java.util.List;
-import java.util.Map;
+import java.net.URI;
 
 @RestController
 @RequestMapping("/api/vehiculos")
@@ -13,32 +21,36 @@ public class VehiculoController {
 
     private final VehiculoService vehiculoService;
 
-
     public VehiculoController(VehiculoService vehiculoService) {
         this.vehiculoService = vehiculoService;
     }
 
+    @PostMapping
+    public ResponseEntity<VehiculoResponse> registrar(@Valid @RequestBody VehiculoRequest request) {
+        VehiculoResponse creado = vehiculoService.registrar(request);
+        URI ubicacion = ServletUriComponentsBuilder.fromCurrentRequest()
+                .path("/{id}").buildAndExpand(creado.idVehiculo()).toUri();
+        return ResponseEntity.created(ubicacion).body(creado);
+    }
+
+    @GetMapping("/{id}")
+    public VehiculoResponse obtenerPorId(@PathVariable Long id) {
+        return vehiculoService.obtenerPorId(id);
+    }
+
     /**
-     * Endpoint para registrar una inspección.
-     * Recibe un JSON desde el cliente y ejecuta la lógica híbrida.
+     * Lista vehículos con filtros opcionales: {@code ?idSede=1&estado=DISPONIBLE}.
      */
-    @PostMapping("/{idVehiculo}/inspeccion")
-    public ResponseEntity<String> registrarInspeccion(
-            @PathVariable Long idVehiculo,
-            @RequestBody Map<String, Object> payload) {
+    @GetMapping
+    public Page<VehiculoResponse> listar(@RequestParam(required = false) Long idSede,
+                                         @RequestParam(required = false) EstadoVehiculo estado,
+                                         @PageableDefault(size = 20) Pageable pageable) {
+        return vehiculoService.listar(idSede, estado, pageable);
+    }
 
-        try {
-
-            String mecanico = (String) payload.get("mecanico");
-            String notas = (String) payload.get("notas");
-            List<String> piezas = (List<String>) payload.get("piezas");
-
-            vehiculoService.registrarInspeccionYBloquearVehiculo(idVehiculo, mecanico, notas, piezas);
-
-            return ResponseEntity.ok("Éxito: Inspección registrada en MongoDB y vehículo bloqueado en PostgreSQL.");
-
-        } catch (Exception e) {
-            return ResponseEntity.internalServerError().body("Error al procesar la solicitud: " + e.getMessage());
-        }
+    @PatchMapping("/{id}/estado")
+    public VehiculoResponse cambiarEstado(@PathVariable Long id,
+                                          @Valid @RequestBody VehiculoEstadoRequest request) {
+        return vehiculoService.cambiarEstado(id, request.estado());
     }
 }
