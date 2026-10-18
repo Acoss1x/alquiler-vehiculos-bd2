@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
@@ -27,6 +28,11 @@ public class ApiExceptionHandler {
         return construir(HttpStatus.NOT_FOUND, ex.getMessage(), null);
     }
 
+    @ExceptionHandler(SolicitudInvalidaException.class)
+    public ResponseEntity<ApiError> solicitudInvalida(SolicitudInvalidaException ex) {
+        return construir(HttpStatus.BAD_REQUEST, ex.getMessage(), null);
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ApiError> validacion(MethodArgumentNotValidException ex) {
         Map<String, String> detalles = new LinkedHashMap<>();
@@ -39,6 +45,12 @@ public class ApiExceptionHandler {
     public ResponseEntity<ApiError> jsonMalformado(HttpMessageNotReadableException ex) {
         return construir(HttpStatus.BAD_REQUEST,
                 "El cuerpo de la solicitud no es válido (JSON malformado o valor no permitido)", null);
+    }
+
+    /** Falta un parámetro obligatorio de la URL (ej. fechaInicio en /disponibles). */
+    @ExceptionHandler(MissingServletRequestParameterException.class)
+    public ResponseEntity<ApiError> parametroFaltante(MissingServletRequestParameterException ex) {
+        return construir(HttpStatus.BAD_REQUEST, "Falta el parámetro obligatorio '" + ex.getParameterName() + "'", null);
     }
 
     /** Parámetro de URL o query con tipo/valor inválido (ej. ?estado=XYZ). */

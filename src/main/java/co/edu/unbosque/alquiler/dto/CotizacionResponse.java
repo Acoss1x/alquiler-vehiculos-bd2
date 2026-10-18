@@ -1,4 +1,10 @@
 package co.edu.unbosque.alquiler.dto;
 
-public class CotizacionResponse {
+import java.math.BigDecimal;
+
+public record CotizacionResponse(
+        Long idVehiculo,
+        int dias,
+        BigDecimal costoTotal
+) {
 }

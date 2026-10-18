@@ -1,4 +1,11 @@
 package co.edu.unbosque.alquiler.dto;
 
-public class SeguroResponse {
+import java.math.BigDecimal;
+
+public record SeguroResponse(
+        Long idSeguro,
+        String nombreSeguro,
+        String descripcion,
+        BigDecimal costoDiario
+) {
 }
