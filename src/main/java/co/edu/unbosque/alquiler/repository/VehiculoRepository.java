@@ -5,10 +5,13 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.jpa.repository.query.Procedure;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -37,6 +40,20 @@ public interface VehiculoRepository extends JpaRepository<Vehiculo, Long> {
 
     @EntityGraph(attributePaths = {"categoria", "sede"})
     Page<Vehiculo> findBySedeIdSedeAndEstado(Long idSede, String estado, Pageable pageable);
+
+    /**
+     * Llama a la función 'fn_vehiculos_disponibles' (RF-03): vehículos que no están
+     * en mantenimiento y no tienen otra reserva activa que se cruce con las fechas.
+     * Los filtros de categoría y sede son opcionales (null = sin filtro).
+     */
+    @Query(value = """
+            SELECT * FROM fn_vehiculos_disponibles(CAST(:fechaInicio AS date), CAST(:fechaFin AS date),
+                                                   CAST(:idCategoria AS bigint), CAST(:idSede AS bigint))
+            """, nativeQuery = true)
+    List<Vehiculo> buscarDisponibles(@Param("fechaInicio") LocalDate fechaInicio,
+                                     @Param("fechaFin") LocalDate fechaFin,
+                                     @Param("idCategoria") Long idCategoria,
+                                     @Param("idSede") Long idSede);
 
     /**
      * Llama al procedimiento 'sp_registrar_vehiculo' en PostgreSQL.
