@@ -28,6 +28,8 @@ public class VehiculoService {
     private final CategoriaRepository categoriaRepository;
     private final SedeRepository sedeRepository;
 
+
+
     public VehiculoService(VehiculoRepository vehiculoRepository,
                            CategoriaRepository categoriaRepository,
                            SedeRepository sedeRepository) {

@@ -21,6 +21,8 @@ import java.util.Optional;
 @Repository
 public interface VehiculoRepository extends JpaRepository<Vehiculo, Long> {
 
+    long countBySedeIdSede(Long idSede);
+    
     @Override
     @EntityGraph(attributePaths = {"categoria", "sede"})
     Optional<Vehiculo> findById(Long id);

@@ -11,6 +11,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import co.edu.unbosque.alquiler.dto.ClienteUpdateRequest;
 
 import java.net.URI;
 
@@ -51,5 +52,11 @@ public class ClienteController {
     public ClienteResponse cambiarEstado(@PathVariable Long id,
                                          @Valid @RequestBody ClienteEstadoRequest request) {
         return clienteService.cambiarEstado(id, request.estado());
+    }
+
+    @PutMapping("/{id}")
+    public ClienteResponse actualizar(@PathVariable Long id,
+                                      @Valid @RequestBody ClienteUpdateRequest request) {
+        return clienteService.actualizar(id, request);
     }
 }
