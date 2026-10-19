@@ -5,6 +5,7 @@ import co.edu.unbosque.alquiler.dto.VehiculoResponse;
 import co.edu.unbosque.alquiler.entity.EstadoVehiculo;
 import co.edu.unbosque.alquiler.entity.Vehiculo;
 import co.edu.unbosque.alquiler.exception.RecursoNoEncontradoException;
+import co.edu.unbosque.alquiler.exception.SolicitudInvalidaException;
 import co.edu.unbosque.alquiler.repository.CategoriaRepository;
 import co.edu.unbosque.alquiler.repository.SedeRepository;
 import co.edu.unbosque.alquiler.repository.VehiculoRepository;
@@ -12,6 +13,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDate;
+import java.util.List;
 
 /**
  * Casos de uso de vehículo (PostgreSQL). Las escrituras con reglas de negocio
@@ -78,6 +82,18 @@ public class VehiculoService {
             pagina = vehiculoRepository.findAll(pageable);
         }
         return pagina.map(this::aRespuesta);
+    }
+
+    @Transactional(readOnly = true)
+    public List<VehiculoResponse> disponibles(LocalDate fechaInicio, LocalDate fechaFin,
+                                              Long idCategoria, Long idSede) {
+        if (fechaFin.isBefore(fechaInicio)) {
+            throw new SolicitudInvalidaException("La fecha de fin no puede ser anterior a la de inicio");
+        }
+        return vehiculoRepository.buscarDisponibles(fechaInicio, fechaFin, idCategoria, idSede)
+                .stream()
+                .map(this::aRespuesta)
+                .toList();
     }
 
     @Transactional
