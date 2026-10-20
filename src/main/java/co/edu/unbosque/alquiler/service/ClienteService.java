@@ -9,6 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import co.edu.unbosque.alquiler.dto.ClienteUpdateRequest;
 
 /**
  * Casos de uso de cliente. Las escrituras con reglas de negocio se delegan
@@ -62,6 +63,19 @@ public class ClienteService {
                 .orElseThrow(() -> new RecursoNoEncontradoException("No existe un cliente con id " + id));
         cliente.setEstado(nuevoEstado);
         return aRespuesta(clienteRepository.save(cliente));
+    }
+
+    @Transactional
+    public ClienteResponse actualizar(Long id, ClienteUpdateRequest request) {
+        Cliente cliente = clienteRepository.findById(id)
+                .orElseThrow(() -> new RecursoNoEncontradoException("No existe un cliente con id " + id));
+        cliente.setPrimerNombre(request.primerNombre());
+        cliente.setSegundoNombre(request.segundoNombre());
+        cliente.setPrimerApellido(request.primerApellido());
+        cliente.setSegundoApellido(request.segundoApellido());
+        cliente.setCorreo(request.correo());
+        cliente.setTelefono(request.telefono());
+        return aRespuesta(clienteRepository.saveAndFlush(cliente));
     }
 
     private ClienteResponse aRespuesta(Cliente c) {

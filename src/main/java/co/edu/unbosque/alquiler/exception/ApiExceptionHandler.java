@@ -79,7 +79,8 @@ public class ApiExceptionHandler {
     @ExceptionHandler(DataAccessException.class)
     public ResponseEntity<ApiError> reglaDeNegocioBD(DataAccessException ex) {
         String causa = NestedExceptionUtils.getMostSpecificCause(ex).getMessage();
-        String mensaje = causa == null ? "Error en la base de datos" : causa.lines().findFirst().orElse(causa);
+        String mensaje = causa == null ? "Error en la base de datos"
+                : causa.lines().findFirst().orElse(causa).replaceFirst("^ERROR:\s*", "");
         return construir(HttpStatus.UNPROCESSABLE_ENTITY, mensaje, null);
     }
 

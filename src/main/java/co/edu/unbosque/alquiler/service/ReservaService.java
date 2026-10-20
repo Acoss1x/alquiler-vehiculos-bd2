@@ -12,6 +12,7 @@ import co.edu.unbosque.alquiler.entity.Pago;
 import co.edu.unbosque.alquiler.entity.Reserva;
 import co.edu.unbosque.alquiler.entity.SeguroReserva;
 import co.edu.unbosque.alquiler.exception.RecursoNoEncontradoException;
+import co.edu.unbosque.alquiler.entity.EstadoPago;
 import co.edu.unbosque.alquiler.exception.SolicitudInvalidaException;
 import co.edu.unbosque.alquiler.repository.AsesorRepository;
 import co.edu.unbosque.alquiler.repository.ClienteRepository;
@@ -167,6 +168,10 @@ public class ReservaService {
     @Transactional
     public ReservaResponse registrarPago(Long idReserva, PagoRequest request) {
         validarExiste(reservaRepository.existsById(idReserva), "reserva", idReserva);
+        if (request.estado() == EstadoPago.REEMBOLSADO) {
+            throw new SolicitudInvalidaException(
+                    "Solo se pueden registrar pagos APROBADO o RECHAZADO; los reembolsos los genera la cancelación de la reserva");
+        }
         reservaRepository.registrarPago(idReserva, request.monto(), request.metodoPago(), request.estado().name());
         return obtenerPorId(idReserva);
     }
