@@ -56,6 +56,19 @@ public class Cliente {
     @Column(name = "estado", nullable = false, length = 15)
     private String estado;
 
+
+    /**
+     * Hash BCrypt de la contraseña. Nunca se devuelve en las respuestas.
+     */
+    @Column(name = "password_hash", nullable = false, length = 100)
+    private String passwordHash;
+
+    /**
+     * TRUE si la clave es temporal y debe cambiarse al iniciar sesión.
+     */
+    @Column(name = "debe_cambiar_clave", nullable = false)
+    private boolean debeCambiarClave;
+
     /**
      * Constructor por defecto requerido por JPA.
      */
@@ -88,6 +101,12 @@ public class Cliente {
 
     public String getEstado() { return estado; }
     public void setEstado(String estado) { this.estado = estado; }
+
+    public String getPasswordHash() { return passwordHash; }
+    public void setPasswordHash(String passwordHash) { this.passwordHash = passwordHash; }
+
+    public boolean isDebeCambiarClave() { return debeCambiarClave; }
+    public void setDebeCambiarClave(boolean debeCambiarClave) { this.debeCambiarClave = debeCambiarClave; }
 
     @Override
     public boolean equals(Object o) {

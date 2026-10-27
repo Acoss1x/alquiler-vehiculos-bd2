@@ -83,9 +83,9 @@ public interface ReservaRepository extends JpaRepository<Reserva, Long> {
                        @Param("p_metodo") String metodo,
                        @Param("p_estado") String estado);
 
-    /** CONFIRMADA -> EN_CURSO (el trigger deja el vehículo ALQUILADO). */
+    /** CONFIRMADA -> EN_CURSO con el asesor que entrega (el trigger deja el vehículo ALQUILADO). */
     @Procedure(procedureName = "sp_iniciar_reserva")
-    void iniciarReserva(@Param("p_id_reserva") Long idReserva);
+    void iniciarReserva(@Param("p_id_reserva") Long idReserva, @Param("p_id_asesor") Long idAsesor);
 
     /** EN_CURSO -> FINALIZADA, solo sin saldo pendiente (el trigger libera el vehículo). */
     @Procedure(procedureName = "sp_finalizar_reserva")

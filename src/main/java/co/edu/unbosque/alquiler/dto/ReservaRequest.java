@@ -13,7 +13,7 @@ import java.util.List;
 public record ReservaRequest(
         @NotNull Long idCliente,
         @NotNull Long idVehiculo,
-        @NotNull Long idAsesor,
+        Long idAsesor,
         @NotNull Long idSedeEntrega,
         @NotNull Long idSedeRecibe,
         @NotNull @FutureOrPresent LocalDate fechaInicio,

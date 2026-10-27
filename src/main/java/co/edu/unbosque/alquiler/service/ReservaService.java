@@ -65,12 +65,17 @@ public class ReservaService {
         this.sedeRepository = sedeRepository;
     }
 
-    /** Crea la reserva en estado PENDIENTE. La función de BD devuelve el id. */
+    /**
+     * Crea la reserva en estado PENDIENTE. La función de BD devuelve el id.
+     * El asesor es opcional: una reserva hecha por el propio cliente nace sin asesor.
+     */
     @Transactional
     public ReservaResponse crear(ReservaRequest request) {
         validarExiste(clienteRepository.existsById(request.idCliente()), "cliente", request.idCliente());
         validarExiste(vehiculoRepository.existsById(request.idVehiculo()), "vehículo", request.idVehiculo());
-        validarExiste(asesorRepository.existsById(request.idAsesor()), "asesor", request.idAsesor());
+        if (request.idAsesor() != null) {
+            validarExiste(asesorRepository.existsById(request.idAsesor()), "asesor", request.idAsesor());
+        }
         validarExiste(sedeRepository.existsById(request.idSedeEntrega()), "sede", request.idSedeEntrega());
         validarExiste(sedeRepository.existsById(request.idSedeRecibe()), "sede", request.idSedeRecibe());
 
@@ -110,8 +115,9 @@ public class ReservaService {
                 nombreCompleto(r.getCliente().getPrimerNombre(), r.getCliente().getPrimerApellido()),
                 r.getVehiculo().getIdVehiculo(),
                 r.getVehiculo().getPlaca(),
-                r.getAsesor().getIdEmpleado(),
-                nombreCompleto(r.getAsesor().getPrimerNombre(), r.getAsesor().getPrimerApellido()),
+                r.getAsesor() == null ? null : r.getAsesor().getIdEmpleado(),
+                r.getAsesor() == null ? null
+                        : nombreCompleto(r.getAsesor().getPrimerNombre(), r.getAsesor().getPrimerApellido()),
                 r.getSedeEntrega().getIdSede(),
                 r.getSedeEntrega().getNombreSede(),
                 r.getSedeRecibe().getIdSede(),
@@ -176,11 +182,12 @@ public class ReservaService {
         return obtenerPorId(idReserva);
     }
 
-    /** CONFIRMADA -> EN_CURSO: entrega del vehículo al cliente. */
+    /** CONFIRMADA -> EN_CURSO: entrega del vehículo al cliente por un asesor activo. */
     @Transactional
-    public ReservaResponse iniciar(Long idReserva) {
+    public ReservaResponse iniciar(Long idReserva, Long idAsesor) {
         validarExiste(reservaRepository.existsById(idReserva), "reserva", idReserva);
-        reservaRepository.iniciarReserva(idReserva);
+        validarExiste(asesorRepository.existsById(idAsesor), "asesor", idAsesor);
+        reservaRepository.iniciarReserva(idReserva, idAsesor);
         return obtenerPorId(idReserva);
     }
 

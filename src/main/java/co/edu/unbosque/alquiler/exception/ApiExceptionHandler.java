@@ -7,11 +7,14 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.web.HttpMediaTypeNotSupportedException;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import java.time.LocalDateTime;
 import java.util.LinkedHashMap;
@@ -45,6 +48,25 @@ public class ApiExceptionHandler {
     public ResponseEntity<ApiError> jsonMalformado(HttpMessageNotReadableException ex) {
         return construir(HttpStatus.BAD_REQUEST,
                 "El cuerpo de la solicitud no es válido (JSON malformado o valor no permitido)", null);
+    }
+
+    /** Petición con cuerpo sin "Content-Type: application/json". */
+    @ExceptionHandler(HttpMediaTypeNotSupportedException.class)
+    public ResponseEntity<ApiError> tipoNoSoportado(HttpMediaTypeNotSupportedException ex) {
+        return construir(HttpStatus.UNSUPPORTED_MEDIA_TYPE,
+                "Tipo de contenido no soportado: use application/json", null);
+    }
+
+    /** Método HTTP que la ruta no admite (ej. GET sobre un POST). */
+    @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
+    public ResponseEntity<ApiError> metodoNoPermitido(HttpRequestMethodNotSupportedException ex) {
+        return construir(HttpStatus.METHOD_NOT_ALLOWED, "Método HTTP no permitido para esta ruta", null);
+    }
+
+    /** Ruta que no existe. */
+    @ExceptionHandler(NoResourceFoundException.class)
+    public ResponseEntity<ApiError> rutaNoExiste(NoResourceFoundException ex) {
+        return construir(HttpStatus.NOT_FOUND, "La ruta solicitada no existe", null);
     }
 
     /** Falta un parámetro obligatorio de la URL (ej. fechaInicio en /disponibles). */

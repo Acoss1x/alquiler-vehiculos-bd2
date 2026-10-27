@@ -17,6 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import co.edu.unbosque.alquiler.dto.IniciarReservaRequest;
 
 import java.net.URI;
 import java.time.LocalDate;
@@ -78,8 +79,8 @@ public class ReservaController {
     }
 
     @PostMapping("/{id}/iniciar")
-    public ReservaResponse iniciar(@PathVariable Long id) {
-        return reservaService.iniciar(id);
+    public ReservaResponse iniciar(@PathVariable Long id, @Valid @RequestBody IniciarReservaRequest request) {
+        return reservaService.iniciar(id, request.idAsesor());
     }
 
     @PostMapping("/{id}/finalizar")
