@@ -15,11 +15,20 @@ import org.springframework.security.web.SecurityFilterChain;
 
 /**
  * API sin sesión: cada petición lleva "Authorization: Bearer <token>".
- * Públicos: login, registro y el catálogo de consulta. Todo lo demás exige token.
- * El rol del token (claim "rol") se convierte en la autoridad ROLE_<rol>.
+ * El rol del token (claim "rol") se convierte en la autoridad ROLE_<rol>
+ * (CLIENTE, ASESOR, TECNICO o ADMINISTRADOR).
+ *
+ * Aquí se define QUÉ ROLES entran a cada ruta; las reglas de propiedad (un cliente solo
+ * ve lo suyo) se aplican en los controladores. Lo que no esté listado se rechaza
+ * (denegado por defecto): al crear un endpoint nuevo hay que agregarlo aquí.
  */
 @Configuration
 public class SecurityConfig {
+
+    private static final String ADMIN = "ADMINISTRADOR";
+    private static final String ASESOR = "ASESOR";
+    private static final String TECNICO = "TECNICO";
+    private static final String CLIENTE = "CLIENTE";
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -35,11 +44,55 @@ public class SecurityConfig {
                 .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+
+                        // --- Públicos: acceso y consulta de catálogo ---
                         .requestMatchers(HttpMethod.POST, "/api/auth/login", "/api/auth/registro").permitAll()
                         .requestMatchers(HttpMethod.GET,
                                 "/api/categorias/**", "/api/seguros/**",
                                 "/api/vehiculos/disponibles", "/api/reservas/cotizacion").permitAll()
-                        .anyRequest().authenticated())
+
+                        // --- Cuenta propia (cualquier persona con sesión) ---
+                        .requestMatchers("/api/auth/**").authenticated()
+
+                        // --- Categorías ---
+                        .requestMatchers(HttpMethod.POST, "/api/categorias").hasRole(ADMIN)
+                        .requestMatchers(HttpMethod.PUT, "/api/categorias/*").hasRole(ADMIN)
+
+                        // --- Vehículos ---
+                        .requestMatchers(HttpMethod.POST, "/api/vehiculos").hasRole(ADMIN)
+                        .requestMatchers(HttpMethod.PATCH, "/api/vehiculos/*/estado").hasAnyRole(ADMIN, TECNICO)
+                        .requestMatchers(HttpMethod.GET, "/api/vehiculos").hasAnyRole(ADMIN, ASESOR, TECNICO)
+                        .requestMatchers(HttpMethod.GET, "/api/vehiculos/*").authenticated()
+
+                        // --- Inspecciones de mantenimiento (MongoDB) ---
+                        .requestMatchers(HttpMethod.GET, "/api/vehiculos/*/inspecciones/**").hasAnyRole(ADMIN, ASESOR, TECNICO)
+                        .requestMatchers("/api/vehiculos/*/inspecciones/**").hasAnyRole(ADMIN, TECNICO)
+                        .requestMatchers("/api/inspecciones/**").hasAnyRole(ADMIN, TECNICO)
+
+                        // --- Clientes y licencias ---
+                        .requestMatchers(HttpMethod.POST, "/api/clientes").hasAnyRole(ADMIN, ASESOR)
+                        .requestMatchers(HttpMethod.GET, "/api/clientes").hasAnyRole(ADMIN, ASESOR)
+                        .requestMatchers(HttpMethod.GET, "/api/clientes/documento/*").hasAnyRole(ADMIN, ASESOR)
+                        .requestMatchers(HttpMethod.PATCH, "/api/clientes/*/estado").hasRole(ADMIN)
+                        .requestMatchers(HttpMethod.GET, "/api/clientes/*", "/api/clientes/*/licencia")
+                        .hasAnyRole(ADMIN, ASESOR, CLIENTE)
+                        .requestMatchers(HttpMethod.PUT, "/api/clientes/*").hasAnyRole(ADMIN, ASESOR, CLIENTE)
+                        .requestMatchers(HttpMethod.POST, "/api/clientes/*/licencia").hasAnyRole(ADMIN, ASESOR, CLIENTE)
+
+                        // --- Empleados ---
+                        .requestMatchers("/api/empleados/**").hasRole(ADMIN)
+
+                        // --- Reservas y pagos ---
+                        .requestMatchers(HttpMethod.POST, "/api/reservas").hasAnyRole(ADMIN, ASESOR, CLIENTE)
+                        .requestMatchers(HttpMethod.GET, "/api/reservas", "/api/reservas/*", "/api/reservas/*/pagos")
+                        .hasAnyRole(ADMIN, ASESOR, CLIENTE)
+                        .requestMatchers(HttpMethod.POST, "/api/reservas/*/pagos", "/api/reservas/*/cancelar")
+                        .hasAnyRole(ADMIN, ASESOR, CLIENTE)
+                        .requestMatchers(HttpMethod.POST, "/api/reservas/*/iniciar", "/api/reservas/*/finalizar")
+                        .hasAnyRole(ADMIN, ASESOR)
+
+                        // --- Todo lo demás: denegado ---
+                        .anyRequest().denyAll())
                 .oauth2ResourceServer(oauth -> oauth
                         .jwt(jwt -> jwt.jwtAuthenticationConverter(convertidor))
                         .authenticationEntryPoint((request, response, ex) -> RespuestaJson.escribir(
