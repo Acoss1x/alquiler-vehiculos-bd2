@@ -49,10 +49,11 @@ public class Reserva {
     private Vehiculo vehiculo;
 
     /**
-     * Asesor que registra y atiende la reserva (obligatorio).
+     * Asesor que atiende la reserva. Es opcional: una reserva hecha por el propio
+     * cliente en la web nace sin asesor, y queda asignado al entregar el vehículo.
      */
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "ASESOR_id_empleado", nullable = false)
+    @JoinColumn(name = "ASESOR_id_empleado")
     private Asesor asesor;
 
     @ManyToOne(fetch = FetchType.LAZY)

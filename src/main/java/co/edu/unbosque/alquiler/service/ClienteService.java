@@ -10,6 +10,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import co.edu.unbosque.alquiler.dto.ClienteUpdateRequest;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 /**
  * Casos de uso de cliente. Las escrituras con reglas de negocio se delegan
@@ -19,13 +20,16 @@ import co.edu.unbosque.alquiler.dto.ClienteUpdateRequest;
 public class ClienteService {
 
     private final ClienteRepository clienteRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    public ClienteService(ClienteRepository clienteRepository) {
+    public ClienteService(ClienteRepository clienteRepository, PasswordEncoder passwordEncoder) {
         this.clienteRepository = clienteRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Transactional
-    public ClienteResponse registrar(ClienteRequest request) {
+    public ClienteResponse registrar(ClienteRequest request, boolean claveTemporal) {
+        String hash = passwordEncoder.encode(request.clave());
         clienteRepository.registrarClienteTransaccional(
                 request.numeroDocumento(),
                 request.primerNombre(),
@@ -33,10 +37,17 @@ public class ClienteService {
                 request.primerApellido(),
                 request.segundoApellido(),
                 request.correo(),
-                request.telefono());
+                request.telefono(),
+                hash);
 
         // El SP no devuelve el id: se consulta por el documento, que es único.
-        return buscarPorDocumento(request.numeroDocumento());
+        ClienteResponse creado = buscarPorDocumento(request.numeroDocumento());
+
+        // Registrado por un empleado: la clave es temporal y el cliente debe cambiarla al entrar.
+        if (claveTemporal) {
+            clienteRepository.cambiarClave("CLIENTE", creado.idCliente(), hash, true);
+        }
+        return creado;
     }
 
     @Transactional(readOnly = true)

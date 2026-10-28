@@ -27,7 +27,7 @@ public class ClienteController {
 
     @PostMapping
     public ResponseEntity<ClienteResponse> registrar(@Valid @RequestBody ClienteRequest request) {
-        ClienteResponse creado = clienteService.registrar(request);
+        ClienteResponse creado = clienteService.registrar(request, true);
         URI ubicacion = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}").buildAndExpand(creado.idCliente()).toUri();
         return ResponseEntity.created(ubicacion).body(creado);

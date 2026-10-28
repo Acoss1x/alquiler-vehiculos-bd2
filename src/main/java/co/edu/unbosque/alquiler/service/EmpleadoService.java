@@ -15,6 +15,7 @@ import co.edu.unbosque.alquiler.repository.AsesorRepository;
 import co.edu.unbosque.alquiler.repository.EmpleadoRepository;
 import co.edu.unbosque.alquiler.repository.SedeRepository;
 import co.edu.unbosque.alquiler.repository.TecnicoRepository;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,17 +34,20 @@ public class EmpleadoService {
     private final TecnicoRepository tecnicoRepository;
     private final AdministradorRepository administradorRepository;
     private final SedeRepository sedeRepository;
+    private final PasswordEncoder passwordEncoder;
 
     public EmpleadoService(EmpleadoRepository empleadoRepository,
                            AsesorRepository asesorRepository,
                            TecnicoRepository tecnicoRepository,
                            AdministradorRepository administradorRepository,
-                           SedeRepository sedeRepository) {
+                           SedeRepository sedeRepository,
+                           PasswordEncoder passwordEncoder) {
         this.empleadoRepository = empleadoRepository;
         this.asesorRepository = asesorRepository;
         this.tecnicoRepository = tecnicoRepository;
         this.administradorRepository = administradorRepository;
         this.sedeRepository = sedeRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Transactional
@@ -78,6 +82,9 @@ public class EmpleadoService {
         empleado.setPrimerApellido(request.primerApellido());
         empleado.setFechaContratacion(request.fechaContratacion());
         empleado.setEstado("ACTIVO");
+        empleado.setCorreo(request.correo().trim().toLowerCase());
+        empleado.setPasswordHash(passwordEncoder.encode(request.clave()));
+        empleado.setDebeCambiarClave(true);   // la clave la define el administrador: se cambia al primer ingreso
         empleado.setSede(sede);
         return aRespuesta(empleadoRepository.saveAndFlush(empleado));
     }
@@ -149,7 +156,7 @@ public class EmpleadoService {
         }
 
         return new EmpleadoResponse(
-                e.getIdEmpleado(), e.getNumeroDocumento(), e.getPrimerNombre(), e.getPrimerApellido(),
+                e.getIdEmpleado(), e.getNumeroDocumento(), e.getPrimerNombre(), e.getPrimerApellido(), e.getCorreo(),
                 e.getFechaContratacion(), e.getEstado(),
                 e.getSede().getIdSede(), e.getSede().getNombreSede(),
                 tipo, mostrador, especialidad, nivelAcceso, bono);

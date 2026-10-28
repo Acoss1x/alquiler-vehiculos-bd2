@@ -10,6 +10,7 @@ public record EmpleadoResponse(
         String numeroDocumento,
         String primerNombre,
         String primerApellido,
+        String correo,
         LocalDate fechaContratacion,
         String estado,
         Long idSede,

@@ -26,6 +26,19 @@ public interface ClienteRepository extends JpaRepository<Cliente, Long> {
             @Param("p_primer_apellido") String primerApellido,
             @Param("p_segundo_apellido") String segundoApellido,
             @Param("p_correo") String correo,
-            @Param("p_telefono") String telefono
+            @Param("p_telefono") String telefono,
+            @Param("p_password_hash") String passwordHash
+    );
+
+    /**
+     * Llama a 'sp_cambiar_clave'. Sirve para clientes ("CLIENTE") y empleados
+     * ("EMPLEADO"); temporal = true obliga a cambiar la clave al iniciar sesión.
+     */
+    @Procedure(procedureName = "sp_cambiar_clave")
+    void cambiarClave(
+            @Param("p_tipo") String tipo,
+            @Param("p_id") Long id,
+            @Param("p_password_hash") String passwordHash,
+            @Param("p_temporal") boolean temporal
     );
 }
