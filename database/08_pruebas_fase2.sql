@@ -167,14 +167,14 @@ PERFORM pg_temp.esperar_error(
             'está inactiva');
 
         -- Categoría inactiva: sus vehículos dejan de ofrecerse y de cotizarse.
-        ASSERT EXISTS (SELECT 1 FROM fn_vehiculos_disponibles(current_date + 10, current_date + 11, NULL, NULL)
+        ASSERT EXISTS (SELECT 1 FROM fn_vehiculos_disponibles(current_date + 30, current_date + 31, NULL, NULL)
                         WHERE id_vehiculo = v_veh1), 'Antes de desactivar debe aparecer';
 UPDATE categoria SET estado = 'INACTIVO'
 WHERE id_categoria = (SELECT categoria_id_categoria FROM vehiculo WHERE id_vehiculo = v_veh1);
-ASSERT NOT EXISTS (SELECT 1 FROM fn_vehiculos_disponibles(current_date + 10, current_date + 11, NULL, NULL)
+ASSERT NOT EXISTS (SELECT 1 FROM fn_vehiculos_disponibles(current_date + 30, current_date + 31, NULL, NULL)
                             WHERE id_vehiculo = v_veh1), 'Con la categoría inactiva no debe aparecer';
         PERFORM pg_temp.esperar_error(
-            format('SELECT fn_costo_reserva(%s, current_date+10, current_date+11, NULL)', v_veh1),
+            format('SELECT fn_costo_reserva(%s, current_date+30, current_date+31, NULL)', v_veh1),
             'categoría del vehículo');
 END;
 
