@@ -4,6 +4,7 @@ import co.edu.unbosque.alquiler.dto.VehiculoEstadoRequest;
 import co.edu.unbosque.alquiler.dto.VehiculoRequest;
 import co.edu.unbosque.alquiler.dto.VehiculoResponse;
 import co.edu.unbosque.alquiler.entity.EstadoVehiculo;
+import co.edu.unbosque.alquiler.security.Sesion;
 import co.edu.unbosque.alquiler.service.VehiculoService;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
@@ -11,6 +12,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -64,9 +68,18 @@ public class VehiculoController {
         return vehiculoService.listar(idSede, estado, pageable);
     }
 
+    /**
+     * Un técnico solo puede mandar un vehículo a mantenimiento o devolverlo a disponible;
+     * dar de baja o vender un vehículo es decisión del administrador.
+     */
     @PatchMapping("/{id}/estado")
-    public VehiculoResponse cambiarEstado(@PathVariable Long id,
+    public VehiculoResponse cambiarEstado(@AuthenticationPrincipal Jwt jwt,
+                                          @PathVariable Long id,
                                           @Valid @RequestBody VehiculoEstadoRequest request) {
+        boolean esBajaOVenta = request.estado() == EstadoVehiculo.BAJA || request.estado() == EstadoVehiculo.VENDIDO;
+        if (esBajaOVenta && !Sesion.esAdministrador(jwt)) {
+            throw new AccessDeniedException("Solo un administrador puede dar de baja o vender un vehículo");
+        }
         return vehiculoService.cambiarEstado(id, request.estado());
     }
 }

@@ -7,6 +7,8 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -29,6 +31,27 @@ public class ApiExceptionHandler {
     @ExceptionHandler(RecursoNoEncontradoException.class)
     public ResponseEntity<ApiError> recursoNoEncontrado(RecursoNoEncontradoException ex) {
         return construir(HttpStatus.NOT_FOUND, ex.getMessage(), null);
+    }
+
+    @ExceptionHandler(CredencialesInvalidasException.class)
+    public ResponseEntity<ApiError> credencialesInvalidas(CredencialesInvalidasException ex) {
+        return construir(HttpStatus.UNAUTHORIZED, ex.getMessage(), null);
+    }
+
+    @ExceptionHandler(CuentaNoActivaException.class)
+    public ResponseEntity<ApiError> cuentaNoActiva(CuentaNoActivaException ex) {
+        return construir(HttpStatus.FORBIDDEN, ex.getMessage(), null);
+    }
+
+    /** Falta de permisos (por rol); sin este manejador el "Exception" genérico lo volvería un 500. */
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<ApiError> accesoDenegado(AccessDeniedException ex) {
+        return construir(HttpStatus.FORBIDDEN, "No tiene permisos para esta operación", null);
+    }
+
+    @ExceptionHandler(AuthenticationException.class)
+    public ResponseEntity<ApiError> noAutenticado(AuthenticationException ex) {
+        return construir(HttpStatus.UNAUTHORIZED, "Autenticación requerida o token inválido", null);
     }
 
     @ExceptionHandler(SolicitudInvalidaException.class)

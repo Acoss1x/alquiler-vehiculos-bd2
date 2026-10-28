@@ -13,6 +13,9 @@ public interface ClienteRepository extends JpaRepository<Cliente, Long> {
 
     Optional<Cliente> findByNumeroDocumento(String numeroDocumento);
 
+    /** Búsqueda por correo sin distinguir mayúsculas (para el inicio de sesión). */
+    Optional<Cliente> findByCorreoIgnoreCase(String correo);
+
     /**
      * Llama al procedimiento almacenado 'sp_registrar_cliente' en PostgreSQL.
      * Delega las validaciones y la transacción al motor relacional

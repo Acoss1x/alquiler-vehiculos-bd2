@@ -206,6 +206,11 @@ public class ReservaService {
         reservaRepository.cancelarReserva(idReserva);
         return obtenerPorId(idReserva);
     }
+    /** ¿La reserva pertenece a ese cliente? Se usa para que un cliente solo opere sobre las suyas. */
+    @Transactional(readOnly = true)
+    public boolean perteneceACliente(Long idReserva, Long idCliente) {
+        return reservaRepository.existsByIdReservaAndClienteIdCliente(idReserva, idCliente);
+    }
 
     private void validarExiste(boolean existe, String recurso, Long id) {
         if (!existe) {

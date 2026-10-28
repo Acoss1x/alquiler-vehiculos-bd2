@@ -26,6 +26,10 @@ public interface ReservaRepository extends JpaRepository<Reserva, Long> {
     @EntityGraph(attributePaths = {"cliente", "vehiculo", "asesor", "sedeEntrega", "sedeRecibe"})
     Optional<Reserva> findById(Long id);
 
+
+    /** ¿La reserva es de ese cliente? Para que un cliente solo opere sobre las suyas. */
+    boolean existsByIdReservaAndClienteIdCliente(Long idReserva, Long idCliente);
+
     @Override
     @EntityGraph(attributePaths = {"cliente", "vehiculo"})
     Page<Reserva> findAll(Pageable pageable);
