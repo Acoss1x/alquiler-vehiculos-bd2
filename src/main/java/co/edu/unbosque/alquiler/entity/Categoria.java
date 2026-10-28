@@ -25,6 +25,10 @@ public class Categoria {
     @Column(name = "tipo_transmision", nullable = false, length = 20)
     private String tipoTransmision;
 
+    /** ACTIVO o INACTIVO. Una categoría inactiva no se ofrece para reservar. */
+    @Column(name = "estado", nullable = false, length = 15)
+    private String estado = "ACTIVO";
+
     public Categoria() {}
 
     public Long getIdCategoria() { return idCategoria; }
@@ -41,6 +45,9 @@ public class Categoria {
 
     public String getTipoTransmision() { return tipoTransmision; }
     public void setTipoTransmision(String tipoTransmision) { this.tipoTransmision = tipoTransmision; }
+
+    public String getEstado() { return estado; }
+    public void setEstado(String estado) { this.estado = estado; }
 
     @Override
     public boolean equals(Object o) {

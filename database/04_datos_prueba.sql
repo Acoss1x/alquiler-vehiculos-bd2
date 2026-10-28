@@ -25,47 +25,47 @@ INSERT INTO seguro (nombre_seguro, descripcion, costo_diario) VALUES
 -- especialización total se verifica al COMMIT) ----------
 BEGIN;
 WITH e AS (
-    INSERT INTO empleado (numero_documento, primer_nombre, primer_apellido, fecha_contratacion, estado, sede_id_sede)
-    VALUES ('1010000001', 'Marta', 'Ríos', DATE '2022-03-01', 'ACTIVO',
+    INSERT INTO empleado (numero_documento, primer_nombre, primer_apellido, fecha_contratacion, estado, correo, password_hash, sede_id_sede)
+    VALUES ('1010000001', 'Marta', 'Ríos', DATE '2022-03-01', 'ACTIVO', 'marta.rios@alquiler.com', crypt('Clave123*', gen_salt('bf', 10)),
             (SELECT id_sede FROM sede WHERE nombre_sede = 'Sede Chapinero'))
     RETURNING id_empleado)
 INSERT INTO administrador (id_empleado, nivel_acceso, bono_gerencial)
 SELECT id_empleado, 'TOTAL', 500000.00 FROM e;
 
 WITH e AS (
-    INSERT INTO empleado (numero_documento, primer_nombre, primer_apellido, fecha_contratacion, estado, sede_id_sede)
-    VALUES ('1010000002', 'Camilo', 'Pardo', DATE '2023-01-15', 'ACTIVO',
+    INSERT INTO empleado (numero_documento, primer_nombre, primer_apellido, fecha_contratacion, estado, correo, password_hash, sede_id_sede)
+    VALUES ('1010000002', 'Camilo', 'Pardo', DATE '2023-01-15', 'ACTIVO', 'camilo.pardo@alquiler.com', crypt('Clave123*', gen_salt('bf', 10)),
             (SELECT id_sede FROM sede WHERE nombre_sede = 'Sede Chapinero'))
     RETURNING id_empleado)
 INSERT INTO asesor (id_empleado, mostrador_asignado) SELECT id_empleado, 1 FROM e;
 
 WITH e AS (
-    INSERT INTO empleado (numero_documento, primer_nombre, primer_apellido, fecha_contratacion, estado, sede_id_sede)
-    VALUES ('1010000003', 'Valentina', 'Mora', DATE '2023-06-10', 'ACTIVO',
+    INSERT INTO empleado (numero_documento, primer_nombre, primer_apellido, fecha_contratacion, estado, correo, password_hash, sede_id_sede)
+    VALUES ('1010000003', 'Valentina', 'Mora', DATE '2023-06-10', 'ACTIVO', 'valentina.mora@alquiler.com', crypt('Clave123*', gen_salt('bf', 10)),
             (SELECT id_sede FROM sede WHERE nombre_sede = 'Sede Aeropuerto'))
     RETURNING id_empleado)
 INSERT INTO asesor (id_empleado, mostrador_asignado) SELECT id_empleado, 2 FROM e;
 
 WITH e AS (
-    INSERT INTO empleado (numero_documento, primer_nombre, primer_apellido, fecha_contratacion, estado, sede_id_sede)
-    VALUES ('1010000004', 'Julián', 'Cortés', DATE '2021-09-20', 'ACTIVO',
+    INSERT INTO empleado (numero_documento, primer_nombre, primer_apellido, fecha_contratacion, estado, correo, password_hash, sede_id_sede)
+    VALUES ('1010000004', 'Julián', 'Cortés', DATE '2021-09-20', 'ACTIVO', 'julian.cortes@alquiler.com', crypt('Clave123*', gen_salt('bf', 10)),
             (SELECT id_sede FROM sede WHERE nombre_sede = 'Sede Chapinero'))
     RETURNING id_empleado)
 INSERT INTO tecnico (id_empleado, especialidad) SELECT id_empleado, 'Frenos y suspensión' FROM e;
 
 WITH e AS (
-    INSERT INTO empleado (numero_documento, primer_nombre, primer_apellido, fecha_contratacion, estado, sede_id_sede)
-    VALUES ('1010000005', 'Sofía', 'Lara', DATE '2024-02-05', 'ACTIVO',
+    INSERT INTO empleado (numero_documento, primer_nombre, primer_apellido, fecha_contratacion, estado, correo, password_hash, sede_id_sede)
+    VALUES ('1010000005', 'Sofía', 'Lara', DATE '2024-02-05', 'ACTIVO', 'sofia.lara@alquiler.com', crypt('Clave123*', gen_salt('bf', 10)),
             (SELECT id_sede FROM sede WHERE nombre_sede = 'Sede El Poblado'))
     RETURNING id_empleado)
 INSERT INTO tecnico (id_empleado, especialidad) SELECT id_empleado, 'Motor y electrónica' FROM e;
 COMMIT;
 
 -- ---------- Clientes y licencias (vía procedimientos) ----------
-CALL sp_registrar_cliente('1020304050', 'Andrés',  'Felipe', 'Gómez',   'Ruiz',   'andres.gomez@correo.com',  '3001112233');
-CALL sp_registrar_cliente('1030405060', 'Laura',   NULL,     'Peña',    NULL,     'laura.pena@correo.com',    '3012223344');
-CALL sp_registrar_cliente('1040506070', 'Camila',  'Andrea', 'Torres',  'Vega',   'camila.torres@correo.com', '3023334455');
-CALL sp_registrar_cliente('1050607080', 'Diego',   NULL,     'Herrera', NULL,     'diego.herrera@correo.com', NULL);
+CALL sp_registrar_cliente('1020304050', 'Andrés',  'Felipe', 'Gómez',   'Ruiz',   'andres.gomez@correo.com',  '3001112233', crypt('Clave123*', gen_salt('bf', 10)));
+CALL sp_registrar_cliente('1030405060', 'Laura',   NULL,     'Peña',    NULL,     'laura.pena@correo.com',    '3012223344', crypt('Clave123*', gen_salt('bf', 10)));
+CALL sp_registrar_cliente('1040506070', 'Camila',  'Andrea', 'Torres',  'Vega',   'camila.torres@correo.com', '3023334455', crypt('Clave123*', gen_salt('bf', 10)));
+CALL sp_registrar_cliente('1050607080', 'Diego',   NULL,     'Herrera', NULL,     'diego.herrera@correo.com', NULL, crypt('Clave123*', gen_salt('bf', 10)));
 
 -- (CALL no admite subconsultas como argumento: se usa un DO con un bucle.)
 -- Laura (1030405060) tiene una licencia que vence pronto: sirve para probar que no

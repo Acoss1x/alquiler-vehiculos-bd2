@@ -6,6 +6,6 @@ public record SeguroResponse(
         Long idSeguro,
         String nombreSeguro,
         String descripcion,
-        BigDecimal costoDiario
-) {
-}
+        BigDecimal costoDiario,
+        String estado
+) {}

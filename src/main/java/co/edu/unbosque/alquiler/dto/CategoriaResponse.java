@@ -7,6 +7,6 @@ public record CategoriaResponse(
         String nombreCategoria,
         Integer capacidadPasajeros,
         BigDecimal tarifaDiaria,
-        String tipoTransmision
-) {
-}
+        String tipoTransmision,
+        String estado
+) {}

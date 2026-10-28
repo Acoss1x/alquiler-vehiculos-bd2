@@ -21,6 +21,10 @@ public class Seguro {
     @Column(name = "costo_diario", nullable = false, precision = 10, scale = 2)
     private BigDecimal costoDiario;
 
+    /** ACTIVO o INACTIVO. Un seguro inactivo no se puede contratar en reservas nuevas. */
+    @Column(name = "estado", nullable = false, length = 15)
+    private String estado = "ACTIVO";
+
     public Seguro() {}
 
     public Long getIdSeguro() { return idSeguro; }
@@ -34,4 +38,7 @@ public class Seguro {
 
     public BigDecimal getCostoDiario() { return costoDiario; }
     public void setCostoDiario(BigDecimal costoDiario) { this.costoDiario = costoDiario; }
+
+    public String getEstado() { return estado; }
+    public void setEstado(String estado) { this.estado = estado; }
 }

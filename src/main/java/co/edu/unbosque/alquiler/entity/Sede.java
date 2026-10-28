@@ -24,6 +24,10 @@ public class Sede {
     @Column(name = "capacidad_estacionamiento", nullable = false)
     private Integer capacidadEstacionamiento;
 
+    /** ACTIVO o INACTIVO. Una sede inactiva no se ofrece para reservar. */
+    @Column(name = "estado", nullable = false, length = 15)
+    private String estado = "ACTIVO";
+
     public Sede() {}
 
     public Long getIdSede() { return idSede; }
@@ -40,4 +44,19 @@ public class Sede {
 
     public Integer getCapacidadEstacionamiento() { return capacidadEstacionamiento; }
     public void setCapacidadEstacionamiento(Integer capacidadEstacionamiento) { this.capacidadEstacionamiento = capacidadEstacionamiento; }
+
+    public String getEstado() { return estado; }
+    public void setEstado(String estado) { this.estado = estado; }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Sede sede)) return false;
+        return Objects.equals(idSede, sede.idSede);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(idSede);
+    }
 }

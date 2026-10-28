@@ -46,7 +46,7 @@ GRANT EXECUTE ON FUNCTION  fn_costo_reserva(BIGINT, DATE, DATE, BIGINT[])       
 GRANT EXECUTE ON FUNCTION  fn_saldo_pendiente(BIGINT)                                             TO rol_asesor;
 GRANT EXECUTE ON FUNCTION  fn_vehiculos_disponibles(DATE, DATE, BIGINT, BIGINT)                   TO rol_asesor;
 GRANT EXECUTE ON FUNCTION  fn_crear_reserva(BIGINT, BIGINT, BIGINT, BIGINT, BIGINT, DATE, DATE, BIGINT[]) TO rol_asesor;
-GRANT EXECUTE ON PROCEDURE sp_registrar_cliente(VARCHAR, VARCHAR, VARCHAR, VARCHAR, VARCHAR, VARCHAR, VARCHAR) TO rol_asesor;
+GRANT EXECUTE ON PROCEDURE sp_registrar_cliente(VARCHAR, VARCHAR, VARCHAR, VARCHAR, VARCHAR, VARCHAR, VARCHAR, VARCHAR) TO rol_asesor;
 GRANT EXECUTE ON PROCEDURE sp_registrar_licencia(BIGINT, VARCHAR, VARCHAR, DATE, DATE)            TO rol_asesor;
 GRANT EXECUTE ON PROCEDURE sp_registrar_pago(BIGINT, NUMERIC, VARCHAR, VARCHAR)                   TO rol_asesor;
 GRANT EXECUTE ON PROCEDURE sp_iniciar_reserva(BIGINT)                                             TO rol_asesor;

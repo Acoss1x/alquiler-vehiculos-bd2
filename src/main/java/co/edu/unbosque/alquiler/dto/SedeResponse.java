@@ -5,6 +5,6 @@ public record SedeResponse(
         String nombreSede,
         String ciudad,
         String direccion,
-        Integer capacidadEstacionamiento
-) {
-}
+        Integer capacidadEstacionamiento,
+        String estado
+) {}

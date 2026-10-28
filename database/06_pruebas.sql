@@ -141,10 +141,10 @@ BEGIN
         'ex_reserva_sin_solapamiento');
 
     RAISE NOTICE '--- 12. Registro de clientes, licencias y vehículos';
-    PERFORM pg_temp.esperar_error('CALL sp_registrar_cliente(''1020304050'', ''X'', NULL, ''Y'', NULL, ''otro@correo.com'', NULL)', 'Ya existe un cliente con el documento');
-    PERFORM pg_temp.esperar_error('CALL sp_registrar_cliente(''999'', ''X'', NULL, ''Y'', NULL, ''ANDRES.GOMEZ@correo.com'', NULL)', 'Ya existe un cliente con el correo');
+    PERFORM pg_temp.esperar_error('CALL sp_registrar_cliente(''1020304050'', ''X'', NULL, ''Y'', NULL, ''otro@correo.com'', NULL, crypt(''Clave123*'', gen_salt(''bf'', 10)))', 'Ya existe un cliente con el documento');
+    PERFORM pg_temp.esperar_error('CALL sp_registrar_cliente(''999'', ''X'', NULL, ''Y'', NULL, ''ANDRES.GOMEZ@correo.com'', NULL, crypt(''Clave123*'', gen_salt(''bf'', 10)))', 'Ya existe un cliente con el correo');
     PERFORM pg_temp.esperar_error(format('CALL sp_registrar_licencia(%s, ''LIC-9999'', ''B1'', current_date-10, current_date+100)', v_andres), 'ya tiene una licencia');
-    CALL sp_registrar_cliente('777', 'Nuevo', NULL, 'Cliente', NULL, 'nuevo@correo.com', NULL);
+    CALL sp_registrar_cliente('777', 'Nuevo', NULL, 'Cliente', NULL, 'nuevo@correo.com', NULL, crypt('Clave123*', gen_salt('bf', 10)));
     PERFORM pg_temp.esperar_error(format('CALL sp_registrar_licencia(%s, ''LIC-V'', ''B1'', current_date-400, current_date-5)', (SELECT id_cliente FROM cliente WHERE numero_documento = '777')), 'vencida');
     PERFORM pg_temp.esperar_error(format('CALL sp_registrar_vehiculo(''ABC123'', ''X'', 2020, 0, NULL, 1, %s)', v_sede_chap), 'Ya existe un vehículo con la placa');
     FOR v_n IN 1..3 LOOP
@@ -155,7 +155,7 @@ BEGIN
     RAISE NOTICE '--- 13. Especialización de empleado: disjunta y total';
     PERFORM pg_temp.esperar_error(format('INSERT INTO tecnico (id_empleado, especialidad) VALUES (%s, ''Frenos'')', v_asesor), 'ya pertenece a otro subtipo');
     PERFORM pg_temp.esperar_error(
-        format('INSERT INTO empleado (numero_documento, primer_nombre, primer_apellido, fecha_contratacion, sede_id_sede) VALUES (''HUERFANO'', ''A'', ''B'', current_date, %s); SET CONSTRAINTS trg_empleado_total IMMEDIATE', v_sede_chap),
+        format('INSERT INTO empleado (numero_documento, primer_nombre, primer_apellido, fecha_contratacion, correo, password_hash, sede_id_sede) VALUES (''HUERFANO'', ''A'', ''B'', current_date, ''huerfano@alquiler.com'', crypt(''x'', gen_salt(''bf'', 4)), %s); SET CONSTRAINTS trg_empleado_total IMMEDIATE', v_sede_chap),
         'especialización total');
 
     RAISE NOTICE '=== TODAS LAS PRUEBAS FUNCIONALES PASARON ===';
@@ -185,7 +185,7 @@ BEGIN
         RAISE NOTICE 'OK  asesor sin acceso a auditoria_reserva: %', SQLERRM;
     END;
     -- Sí puede registrar clientes, aunque no tenga INSERT directo (SECURITY DEFINER).
-    CALL sp_registrar_cliente('888', 'Prueba', NULL, 'Rol', NULL, 'prueba.rol@correo.com', NULL);
+    CALL sp_registrar_cliente('888', 'Prueba', NULL, 'Rol', NULL, 'prueba.rol@correo.com', NULL, crypt('Clave123*', gen_salt('bf', 10)));
     RAISE NOTICE 'OK  asesor registró un cliente solo a través del procedimiento';
 END $$;
 RESET ROLE;
