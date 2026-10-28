@@ -2,9 +2,13 @@ package co.edu.unbosque.alquiler.controller;
 
 import co.edu.unbosque.alquiler.dto.CategoriaRequest;
 import co.edu.unbosque.alquiler.dto.CategoriaResponse;
+import co.edu.unbosque.alquiler.dto.EstadoCatalogoRequest;
+import co.edu.unbosque.alquiler.security.Catalogo;
 import co.edu.unbosque.alquiler.service.CategoriaService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -30,8 +34,15 @@ public class CategoriaController {
     }
 
     @GetMapping
-    public List<CategoriaResponse> listar() {
-        return categoriaService.listar();
+    public List<CategoriaResponse> listar(@AuthenticationPrincipal Jwt jwt,
+                                          @RequestParam(defaultValue = "false") boolean incluirInactivos) {
+        Catalogo.exigirAdminSiPideInactivos(jwt, incluirInactivos);
+        return categoriaService.listar(incluirInactivos);
+    }
+
+    @PatchMapping("/{id}/estado")
+    public CategoriaResponse cambiarEstado(@PathVariable Long id, @Valid @RequestBody EstadoCatalogoRequest request) {
+        return categoriaService.cambiarEstado(id, request.estado());
     }
 
     @GetMapping("/{id}")

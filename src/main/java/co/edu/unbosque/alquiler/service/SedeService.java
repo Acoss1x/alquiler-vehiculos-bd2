@@ -37,8 +37,19 @@ public class SedeService {
     }
 
     @Transactional(readOnly = true)
-    public List<SedeResponse> listar() {
-        return sedeRepository.findAll(Sort.by("nombreSede")).stream().map(this::aRespuesta).toList();
+    public List<SedeResponse> listar(boolean incluirInactivos) {
+        Sort orden = Sort.by("nombreSede");
+        List<Sede> sedes = incluirInactivos
+                ? sedeRepository.findAll(orden)
+                : sedeRepository.findByEstado("ACTIVO", orden);
+        return sedes.stream().map(this::aRespuesta).toList();
+    }
+
+    @Transactional
+    public SedeResponse cambiarEstado(Long id, String estado) {
+        Sede sede = buscar(id);
+        sede.setEstado(estado);
+        return aRespuesta(sedeRepository.saveAndFlush(sede));   // flush: si el trigger rechaza, falla aquí
     }
 
     @Transactional
@@ -67,6 +78,6 @@ public class SedeService {
 
     private SedeResponse aRespuesta(Sede s) {
         return new SedeResponse(s.getIdSede(), s.getNombreSede(), s.getCiudad(),
-                s.getDireccion(), s.getCapacidadEstacionamiento());
+                s.getDireccion(), s.getCapacidadEstacionamiento(), s.getEstado());
     }
 }

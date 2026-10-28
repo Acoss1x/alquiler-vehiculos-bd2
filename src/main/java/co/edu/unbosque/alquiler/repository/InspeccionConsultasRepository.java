@@ -15,7 +15,9 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Repository;
-
+import co.edu.unbosque.alquiler.document.DanoVehiculo;
+import co.edu.unbosque.alquiler.document.NivelCombustible;
+import co.edu.unbosque.alquiler.document.TipoInspeccion;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
@@ -72,7 +74,7 @@ public class InspeccionConsultasRepository {
     public List<GastoTecnicoResponse> gastoPorTecnico() {
         Aggregation pipeline = Aggregation.newAggregation(
                 Aggregation.unwind("piezasCambiadas"),
-                Aggregation.group("idTecnico")
+                Aggregation.group("idEmpleado")
                         .sum("piezasCambiadas.cantidad").as("totalPiezas")
                         .sum(costoDePieza()).as("costoTotal"),
                 Aggregation.sort(Sort.Direction.DESC, "costoTotal"));
@@ -86,14 +88,18 @@ public class InspeccionConsultasRepository {
                 .toList();
     }
 
-    /** Búsqueda con filtros opcionales: pieza (parcial, sin mayúsculas), técnico y rango de fechas. */
-    public List<InspeccionVehiculo> buscar(String pieza, Long idTecnico, LocalDate desde, LocalDate hasta) {
+    /** Búsqueda con filtros opcionales: pieza (parcial, sin mayúsculas), empleado, tipo y rango de fechas. */
+    public List<InspeccionVehiculo> buscar(String pieza, Long idEmpleado, TipoInspeccion tipo,
+                                           LocalDate desde, LocalDate hasta) {
         Query query = new Query();
         if (pieza != null && !pieza.isBlank()) {
             query.addCriteria(Criteria.where("piezasCambiadas.nombre").regex(Pattern.quote(pieza.trim()), "i"));
         }
-        if (idTecnico != null) {
-            query.addCriteria(Criteria.where("idTecnico").is(idTecnico));
+        if (idEmpleado != null) {
+            query.addCriteria(Criteria.where("idEmpleado").is(idEmpleado));
+        }
+        if (tipo != null) {
+            query.addCriteria(Criteria.where("tipo").is(tipo));
         }
         if (desde != null || hasta != null) {
             Criteria fecha = Criteria.where("fechaInspeccion");
@@ -107,6 +113,35 @@ public class InspeccionConsultasRepository {
         }
         query.with(Sort.by(Sort.Direction.DESC, "fechaInspeccion"));
         return mongoTemplate.find(query, InspeccionVehiculo.class);
+    }
+
+    /** $set de los campos editables: no reescribe el documento (así no pisa fotos agregadas al mismo tiempo). */
+    public void actualizarContenido(String idInspeccion, String observaciones, NivelCombustible combustible,
+                                    List<DanoVehiculo> danos, List<PiezaCambiada> piezas) {
+        mongoTemplate.updateFirst(
+                Query.query(Criteria.where("_id").is(idInspeccion)),
+                new Update()
+                        .set("observacionesGenerales", observaciones)
+                        .set("combustible", combustible)
+                        .set("danos", danos)
+                        .set("piezasCambiadas", piezas),
+                InspeccionVehiculo.class);
+    }
+
+    /** $push condicionado: solo agrega si aún no se llegó al máximo (operación atómica). */
+    public boolean agregarFoto(String idInspeccion, String idFoto, int maximo) {
+        UpdateResult resultado = mongoTemplate.updateFirst(
+                Query.query(Criteria.where("_id").is(idInspeccion).and("fotos." + (maximo - 1)).exists(false)),
+                new Update().push("fotos", idFoto),
+                InspeccionVehiculo.class);
+        return resultado.getModifiedCount() > 0;
+    }
+
+    public void quitarFoto(String idInspeccion, String idFoto) {
+        mongoTemplate.updateFirst(
+                Query.query(Criteria.where("_id").is(idInspeccion)),
+                new Update().pull("fotos", idFoto),
+                InspeccionVehiculo.class);
     }
 
     /** Operador $push: agrega una pieza sin reescribir el documento completo. */

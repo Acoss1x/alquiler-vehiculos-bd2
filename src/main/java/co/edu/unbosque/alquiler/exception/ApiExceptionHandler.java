@@ -138,4 +138,19 @@ public class ApiExceptionHandler {
         ApiError cuerpo = new ApiError(LocalDateTime.now(), status.value(), status.getReasonPhrase(), mensaje, detalles);
         return ResponseEntity.status(status).body(cuerpo);
     }
+
+    /** Archivo mayor al límite de multipart. */
+    @ExceptionHandler(org.springframework.web.multipart.MaxUploadSizeExceededException.class)
+    public ResponseEntity<ApiError> archivoDemasiadoGrande(
+            org.springframework.web.multipart.MaxUploadSizeExceededException ex) {
+        return construir(HttpStatus.PAYLOAD_TOO_LARGE, "El archivo supera el tamaño máximo permitido (5 MB)", null);
+    }
+
+    /** Petición que no es multipart o a la que le falta el archivo. */
+    @ExceptionHandler({org.springframework.web.multipart.MultipartException.class,
+            org.springframework.web.multipart.support.MissingServletRequestPartException.class})
+    public ResponseEntity<ApiError> multipartInvalido(Exception ex) {
+        return construir(HttpStatus.BAD_REQUEST,
+                "Envíe la imagen como multipart/form-data en el campo 'archivo'", null);
+    }
 }

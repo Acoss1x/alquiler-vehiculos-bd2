@@ -36,8 +36,19 @@ public class CategoriaService {
     }
 
     @Transactional(readOnly = true)
-    public List<CategoriaResponse> listar() {
-        return categoriaRepository.findAll(Sort.by("nombreCategoria")).stream().map(this::aRespuesta).toList();
+    public List<CategoriaResponse> listar(boolean incluirInactivos) {
+        Sort orden = Sort.by("nombreCategoria");
+        List<Categoria> categorias = incluirInactivos
+                ? categoriaRepository.findAll(orden)
+                : categoriaRepository.findByEstado("ACTIVO", orden);
+        return categorias.stream().map(this::aRespuesta).toList();
+    }
+
+    @Transactional
+    public CategoriaResponse cambiarEstado(Long id, String estado) {
+        Categoria categoria = buscar(id);
+        categoria.setEstado(estado);
+        return aRespuesta(categoriaRepository.saveAndFlush(categoria));
     }
 
     @Transactional
@@ -61,6 +72,6 @@ public class CategoriaService {
 
     private CategoriaResponse aRespuesta(Categoria c) {
         return new CategoriaResponse(c.getIdCategoria(), c.getNombreCategoria(),
-                c.getCapacidadPasajeros(), c.getTarifaDiaria(), c.getTipoTransmision());
+                c.getCapacidadPasajeros(), c.getTarifaDiaria(), c.getTipoTransmision(), c.getEstado());
     }
 }

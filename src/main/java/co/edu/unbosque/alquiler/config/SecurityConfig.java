@@ -48,15 +48,17 @@ public class SecurityConfig {
                         // --- Públicos: acceso y consulta de catálogo ---
                         .requestMatchers(HttpMethod.POST, "/api/auth/login", "/api/auth/registro").permitAll()
                         .requestMatchers(HttpMethod.GET,
-                                "/api/categorias/**", "/api/seguros/**",
+                                "/api/categorias/**", "/api/seguros/**", "/api/sedes/**",
                                 "/api/vehiculos/disponibles", "/api/reservas/cotizacion").permitAll()
 
                         // --- Cuenta propia (cualquier persona con sesión) ---
                         .requestMatchers("/api/auth/**").authenticated()
 
-                        // --- Categorías ---
-                        .requestMatchers(HttpMethod.POST, "/api/categorias").hasRole(ADMIN)
-                        .requestMatchers(HttpMethod.PUT, "/api/categorias/*").hasRole(ADMIN)
+                        // --- Catálogos: solo el administrador modifica ---
+                        .requestMatchers(HttpMethod.POST, "/api/sedes", "/api/categorias", "/api/seguros").hasRole(ADMIN)
+                        .requestMatchers(HttpMethod.PUT, "/api/sedes/*", "/api/categorias/*", "/api/seguros/*").hasRole(ADMIN)
+                        .requestMatchers(HttpMethod.PATCH, "/api/sedes/*/estado", "/api/categorias/*/estado",
+                                "/api/seguros/*/estado").hasRole(ADMIN)
 
                         // --- Vehículos ---
                         .requestMatchers(HttpMethod.POST, "/api/vehiculos").hasRole(ADMIN)
@@ -64,9 +66,10 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/api/vehiculos").hasAnyRole(ADMIN, ASESOR, TECNICO)
                         .requestMatchers(HttpMethod.GET, "/api/vehiculos/*").authenticated()
 
-                        // --- Inspecciones de mantenimiento (MongoDB) ---
-                        .requestMatchers(HttpMethod.GET, "/api/vehiculos/*/inspecciones/**").hasAnyRole(ADMIN, ASESOR, TECNICO)
-                        .requestMatchers("/api/vehiculos/*/inspecciones/**").hasAnyRole(ADMIN, TECNICO)
+                        // --- Inspecciones (MongoDB) ---
+                        .requestMatchers(HttpMethod.GET, "/api/inspecciones/fotos/*", "/api/inspecciones/reserva/*")
+                        .hasAnyRole(ADMIN, ASESOR, TECNICO, CLIENTE)
+                        .requestMatchers("/api/vehiculos/*/inspecciones/**").hasAnyRole(ADMIN, ASESOR, TECNICO)
                         .requestMatchers("/api/inspecciones/**").hasAnyRole(ADMIN, TECNICO)
 
                         // --- Clientes y licencias ---
@@ -90,6 +93,12 @@ public class SecurityConfig {
                         .hasAnyRole(ADMIN, ASESOR, CLIENTE)
                         .requestMatchers(HttpMethod.POST, "/api/reservas/*/iniciar", "/api/reservas/*/finalizar")
                         .hasAnyRole(ADMIN, ASESOR)
+
+                        // --- Penalizaciones por daños ---
+                        .requestMatchers(HttpMethod.POST, "/api/reservas/*/penalizaciones").hasAnyRole(ADMIN, ASESOR)
+                        .requestMatchers(HttpMethod.GET, "/api/reservas/*/penalizaciones", "/api/clientes/*/penalizaciones")
+                        .hasAnyRole(ADMIN, ASESOR, CLIENTE)
+                        .requestMatchers(HttpMethod.PATCH, "/api/penalizaciones/*/estado").hasRole(ADMIN)
 
                         // --- Todo lo demás: denegado ---
                         .anyRequest().denyAll())

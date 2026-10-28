@@ -31,6 +31,8 @@ import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.stream.Collectors;
+import co.edu.unbosque.alquiler.document.TipoInspeccion;
+import co.edu.unbosque.alquiler.repository.InspeccionRepository;
 
 /**
  * Casos de uso de reservas y pagos. Las reglas de negocio (disponibilidad,
@@ -49,13 +51,16 @@ public class ReservaService {
     private final AsesorRepository asesorRepository;
     private final SedeRepository sedeRepository;
 
+    private final InspeccionRepository inspeccionRepository;
+
     public ReservaService(ReservaRepository reservaRepository,
                           PagoRepository pagoRepository,
                           SeguroReservaRepository seguroReservaRepository,
                           ClienteRepository clienteRepository,
                           VehiculoRepository vehiculoRepository,
                           AsesorRepository asesorRepository,
-                          SedeRepository sedeRepository) {
+                          SedeRepository sedeRepository,
+                          InspeccionRepository inspeccionRepository) {
         this.reservaRepository = reservaRepository;
         this.pagoRepository = pagoRepository;
         this.seguroReservaRepository = seguroReservaRepository;
@@ -63,6 +68,7 @@ public class ReservaService {
         this.vehiculoRepository = vehiculoRepository;
         this.asesorRepository = asesorRepository;
         this.sedeRepository = sedeRepository;
+        this.inspeccionRepository = inspeccionRepository;
     }
 
     /**
@@ -182,21 +188,37 @@ public class ReservaService {
         return obtenerPorId(idReserva);
     }
 
-    /** CONFIRMADA -> EN_CURSO: entrega del vehículo al cliente por un asesor activo. */
+    /**
+     * CONFIRMADA -> EN_CURSO: entrega del vehículo al cliente por un asesor activo.
+     * Exige que antes se haya registrado la inspección de entrega (Mongo).
+     */
     @Transactional
     public ReservaResponse iniciar(Long idReserva, Long idAsesor) {
         validarExiste(reservaRepository.existsById(idReserva), "reserva", idReserva);
         validarExiste(asesorRepository.existsById(idAsesor), "asesor", idAsesor);
+        exigirInspeccion(idReserva, TipoInspeccion.ENTREGA,
+                "No se puede entregar el vehículo: falta registrar la inspección de entrega");
         reservaRepository.iniciarReserva(idReserva, idAsesor);
         return obtenerPorId(idReserva);
     }
 
-    /** EN_CURSO -> FINALIZADA: devolución del vehículo; exige saldo en cero. */
+    /**
+     * EN_CURSO -> FINALIZADA: devolución del vehículo; exige saldo en cero y la
+     * inspección de devolución (Mongo).
+     */
     @Transactional
     public ReservaResponse finalizar(Long idReserva) {
         validarExiste(reservaRepository.existsById(idReserva), "reserva", idReserva);
+        exigirInspeccion(idReserva, TipoInspeccion.DEVOLUCION,
+                "No se puede finalizar la reserva: falta registrar la inspección de devolución");
         reservaRepository.finalizarReserva(idReserva);
         return obtenerPorId(idReserva);
+    }
+
+    private void exigirInspeccion(Long idReserva, TipoInspeccion tipo, String mensaje) {
+        if (!inspeccionRepository.existsByIdReservaAndTipo(idReserva, tipo)) {
+            throw new SolicitudInvalidaException(mensaje);
+        }
     }
 
     /** Cancela una reserva PENDIENTE o CONFIRMADA y reembolsa los pagos aprobados. */

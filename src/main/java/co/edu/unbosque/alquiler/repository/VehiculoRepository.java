@@ -83,4 +83,11 @@ public interface VehiculoRepository extends JpaRepository<Vehiculo, Long> {
             @Param("p_id_vehiculo") Long idVehiculo,
             @Param("p_nuevo_estado") String nuevoEstado
     );
+
+    /** Procedimiento 'sp_actualizar_kilometraje_vehiculo': el kilometraje nunca baja. */
+    @Procedure(procedureName = "sp_actualizar_kilometraje_vehiculo")
+    void actualizarKilometrajeVehiculo(
+            @Param("p_id_vehiculo") Long idVehiculo,
+            @Param("p_kilometraje") Integer kilometraje
+    );
 }
