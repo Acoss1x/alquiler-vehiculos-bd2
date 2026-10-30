@@ -100,6 +100,11 @@ public class SecurityConfig {
                         .hasAnyRole(ADMIN, ASESOR, CLIENTE)
                         .requestMatchers(HttpMethod.PATCH, "/api/penalizaciones/*/estado").hasRole(ADMIN)
 
+                        // --- Reportes (RF-10) ---
+                        .requestMatchers(HttpMethod.GET, "/api/reportes/vehiculos/*/historial", "/api/reportes/flota/estado")
+                        .hasAnyRole(ADMIN, TECNICO)
+                        .requestMatchers(HttpMethod.GET, "/api/reportes/**").hasRole(ADMIN)
+
                         // --- Todo lo demás: denegado ---
                         .anyRequest().denyAll())
                 .oauth2ResourceServer(oauth -> oauth
