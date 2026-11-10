@@ -46,7 +46,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
 
                         // --- Públicos: acceso y consulta de catálogo ---
-                        .requestMatchers(HttpMethod.POST, "/api/auth/login", "/api/auth/registro").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/auth/login", "/api/auth/registro", "/api/auth/recuperar-clave").permitAll()
                         .requestMatchers(HttpMethod.GET,
                                 "/api/categorias/**", "/api/seguros/**", "/api/sedes/**",
                                 "/api/vehiculos/disponibles", "/api/reservas/cotizacion").permitAll()

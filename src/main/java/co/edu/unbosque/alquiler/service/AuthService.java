@@ -1,13 +1,12 @@
 package co.edu.unbosque.alquiler.service;
 
 import co.edu.unbosque.alquiler.dto.CambiarClaveRequest;
-import co.edu.unbosque.alquiler.dto.ClaveTemporalResponse;
 import co.edu.unbosque.alquiler.dto.ClienteResponse;
 import co.edu.unbosque.alquiler.dto.LoginRequest;
 import co.edu.unbosque.alquiler.dto.LoginResponse;
 import co.edu.unbosque.alquiler.dto.PerfilResponse;
+import co.edu.unbosque.alquiler.dto.RecuperarClaveRequest;
 import co.edu.unbosque.alquiler.dto.RegistroRequest;
-import co.edu.unbosque.alquiler.dto.RestablecerClaveRequest;
 import co.edu.unbosque.alquiler.entity.Administrador;
 import co.edu.unbosque.alquiler.entity.Asesor;
 import co.edu.unbosque.alquiler.entity.Cliente;
@@ -20,16 +19,12 @@ import co.edu.unbosque.alquiler.exception.SolicitudInvalidaException;
 import co.edu.unbosque.alquiler.repository.ClienteRepository;
 import co.edu.unbosque.alquiler.repository.EmpleadoRepository;
 import co.edu.unbosque.alquiler.security.JwtService;
+import co.edu.unbosque.alquiler.security.LimitadorIntentos;
 import jakarta.persistence.EntityManager;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.security.SecureRandom;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 import java.util.Optional;
 
 /**
@@ -48,11 +43,6 @@ public class AuthService {
      */
     private static final String HASH_RELLENO = "$2a$10$W/iz47lH7LTk5APDAynlh.lHB/IjVv/VVryT5fgjGc7n293X7RYtu";
 
-    private static final String MAYUSCULAS = "ABCDEFGHJKLMNPQRSTUVWXYZ";
-    private static final String MINUSCULAS = "abcdefghijkmnpqrstuvwxyz";
-    private static final String DIGITOS = "23456789";
-    private static final int LONGITUD_CLAVE_TEMPORAL = 12;
-
     private final ClienteRepository clienteRepository;
     private final EmpleadoRepository empleadoRepository;
     private final ClienteService clienteService;
@@ -60,7 +50,7 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final EntityManager entityManager;
-    private final SecureRandom aleatorio = new SecureRandom();
+    private final LimitadorIntentos limitador;
 
     public AuthService(ClienteRepository clienteRepository,
                        EmpleadoRepository empleadoRepository,
@@ -68,7 +58,8 @@ public class AuthService {
                        LicenciaService licenciaService,
                        PasswordEncoder passwordEncoder,
                        JwtService jwtService,
-                       EntityManager entityManager) {
+                       EntityManager entityManager,
+                       LimitadorIntentos limitador) {
         this.clienteRepository = clienteRepository;
         this.empleadoRepository = empleadoRepository;
         this.clienteService = clienteService;
@@ -76,10 +67,11 @@ public class AuthService {
         this.passwordEncoder = passwordEncoder;
         this.jwtService = jwtService;
         this.entityManager = entityManager;
+        this.limitador = limitador;
     }
 
     /** Cuenta de acceso (cliente o empleado) con lo necesario para autenticar. */
-    private record Cuenta(String tipo, String rol, Long id, String nombre, String correo,
+    private record Cuenta(String tipo, String rol, Long id, String nombre, String correo, String documento,
                           String estado, String hash, boolean debeCambiarClave) {
 
         PerfilResponse aPerfil() {
@@ -138,21 +130,28 @@ public class AuthService {
     }
 
     /**
-     * Restablece la contraseña de otra persona con una clave temporal que debe cambiar al entrar.
-     * Un administrador puede restablecer a cualquiera; un asesor, solo a clientes.
+     * Recuperación hecha por la propia persona, sin sesión: se verifica que el correo y el número
+     * de documento correspondan a la misma cuenta y se guarda la nueva clave. Cualquier dato que
+     * no coincida produce el mismo error, para no revelar qué correos están registrados, y los
+     * fallos repetidos sobre un mismo correo se bloquean un rato.
      */
     @Transactional
-    public ClaveTemporalResponse restablecerClave(String rolActor, RestablecerClaveRequest request) {
-        boolean permitido = "ADMINISTRADOR".equals(rolActor)
-                || ("ASESOR".equals(rolActor) && TIPO_CLIENTE.equals(request.tipo()));
-        if (!permitido) {
-            throw new AccessDeniedException("No tiene permisos para restablecer esta contraseña");
-        }
-        buscarCuenta(request.tipo(), request.id());   // 404 si no existe
+    public void recuperarClave(RecuperarClaveRequest request) {
+        String correo = request.correo().trim().toLowerCase();
+        String documento = request.numeroDocumento().trim();
+        limitador.verificar(correo);
 
-        String temporal = generarClaveTemporal();
-        clienteRepository.cambiarClave(request.tipo(), request.id(), passwordEncoder.encode(temporal), true);
-        return new ClaveTemporalResponse(temporal);
+        Optional<Cuenta> cuenta = buscarPorCorreo(correo)
+                .filter(c -> c.documento() != null && c.documento().equalsIgnoreCase(documento));
+        if (cuenta.isEmpty()) {
+            passwordEncoder.matches(request.claveNueva(), HASH_RELLENO);   // mismo costo que el caso válido
+            limitador.registrarFallo(correo);
+            throw new SolicitudInvalidaException("El correo y el número de documento no coinciden con ninguna cuenta");
+        }
+
+        Cuenta c = cuenta.get();
+        clienteRepository.cambiarClave(c.tipo(), c.id(), passwordEncoder.encode(request.claveNueva()), false);
+        limitador.limpiar(correo);
     }
 
     // ---------- Apoyo ----------
@@ -184,7 +183,7 @@ public class AuthService {
 
     private Cuenta deCliente(Cliente c) {
         return new Cuenta(TIPO_CLIENTE, "CLIENTE", c.getIdCliente(),
-                c.getPrimerNombre() + " " + c.getPrimerApellido(), c.getCorreo(),
+                c.getPrimerNombre() + " " + c.getPrimerApellido(), c.getCorreo(), c.getNumeroDocumento(),
                 c.getEstado(), c.getPasswordHash(), c.isDebeCambiarClave());
     }
 
@@ -200,25 +199,7 @@ public class AuthService {
             throw new IllegalStateException("El empleado " + e.getIdEmpleado() + " no tiene subtipo");
         }
         return new Cuenta(TIPO_EMPLEADO, rol, e.getIdEmpleado(),
-                e.getPrimerNombre() + " " + e.getPrimerApellido(), e.getCorreo(),
+                e.getPrimerNombre() + " " + e.getPrimerApellido(), e.getCorreo(), e.getNumeroDocumento(),
                 e.getEstado(), e.getPasswordHash(), e.isDebeCambiarClave());
-    }
-
-    /** 12 caracteres con al menos una mayúscula, una minúscula y un número (sin caracteres ambiguos). */
-    private String generarClaveTemporal() {
-        String todos = MAYUSCULAS + MINUSCULAS + DIGITOS;
-        List<Character> caracteres = new ArrayList<>();
-        caracteres.add(MAYUSCULAS.charAt(aleatorio.nextInt(MAYUSCULAS.length())));
-        caracteres.add(MINUSCULAS.charAt(aleatorio.nextInt(MINUSCULAS.length())));
-        caracteres.add(DIGITOS.charAt(aleatorio.nextInt(DIGITOS.length())));
-        while (caracteres.size() < LONGITUD_CLAVE_TEMPORAL) {
-            caracteres.add(todos.charAt(aleatorio.nextInt(todos.length())));
-        }
-        Collections.shuffle(caracteres, aleatorio);
-        StringBuilder clave = new StringBuilder();
-        for (char c : caracteres) {
-            clave.append(c);
-        }
-        return clave.toString();
     }
 }
