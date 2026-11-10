@@ -294,7 +294,7 @@ BEGIN
         RAISE EXCEPTION 'La fecha de inicio no puede ser pasada';
     END IF;
 
-    SELECT estado INTO v_estado_cli FROM cliente WHERE id_cliente = p_id_cliente;
+    SELECT estado INTO v_estado_cli FROM cliente WHERE id_cliente = p_id_cliente FOR UPDATE;   -- serializa las reservas simultaneas de un mismo cliente (supuesto 17)
     IF NOT FOUND THEN RAISE EXCEPTION 'No existe el cliente con id %', p_id_cliente; END IF;
     IF v_estado_cli <> 'ACTIVO' THEN RAISE EXCEPTION 'El cliente % está inactivo', p_id_cliente; END IF;
 
@@ -321,6 +321,16 @@ BEGIN
            AND daterange(r.fecha_inicio, r.fecha_fin, '[]')
                && daterange(p_fecha_inicio, p_fecha_fin, '[]')) THEN
         RAISE EXCEPTION 'El vehículo % ya tiene una reserva activa que se cruza con esas fechas', p_id_vehiculo;
+    END IF;
+
+    -- Supuesto 17: un cliente no puede tener dos reservas activas que se crucen en las mismas fechas.
+    IF EXISTS (
+        SELECT 1 FROM reserva r
+         WHERE r.cliente_id_cliente = p_id_cliente
+           AND r.estado_reserva IN ('PENDIENTE', 'CONFIRMADA', 'EN_CURSO')
+           AND daterange(r.fecha_inicio, r.fecha_fin, '[]')
+               && daterange(p_fecha_inicio, p_fecha_fin, '[]')) THEN
+        RAISE EXCEPTION 'El cliente % ya tiene una reserva activa que se cruza con esas fechas', p_id_cliente;
     END IF;
 
     v_costo := fn_costo_reserva(p_id_vehiculo, p_fecha_inicio, p_fecha_fin, p_ids_seguros);
