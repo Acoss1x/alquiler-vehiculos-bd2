@@ -89,8 +89,9 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/api/reservas").hasAnyRole(ADMIN, ASESOR, CLIENTE)
                         .requestMatchers(HttpMethod.GET, "/api/reservas", "/api/reservas/*", "/api/reservas/*/pagos")
                         .hasAnyRole(ADMIN, ASESOR, CLIENTE)
-                        .requestMatchers(HttpMethod.POST, "/api/reservas/*/pagos", "/api/reservas/*/cancelar")
-                        .hasAnyRole(ADMIN, ASESOR, CLIENTE)
+                        // El pago lo registra el personal: el cliente no puede marcar su propio pago como APROBADO.
+                        .requestMatchers(HttpMethod.POST, "/api/reservas/*/pagos").hasAnyRole(ADMIN, ASESOR)
+                        .requestMatchers(HttpMethod.POST, "/api/reservas/*/cancelar").hasAnyRole(ADMIN, ASESOR, CLIENTE)
                         .requestMatchers(HttpMethod.POST, "/api/reservas/*/iniciar", "/api/reservas/*/finalizar")
                         .hasAnyRole(ADMIN, ASESOR)
 
