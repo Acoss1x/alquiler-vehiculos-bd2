@@ -94,7 +94,7 @@ public class ReservaController {
         return reservaService.listarPagos(id);
     }
 
-    /** Registra un pago (abono o saldo) y devuelve la reserva actualizada. */
+    /** Registra un pago (abono o saldo) y devuelve la reserva actualizada. Solo personal (ver SecurityConfig). */
     @PostMapping("/{id}/pagos")
     public ResponseEntity<ReservaResponse> registrarPago(@AuthenticationPrincipal Jwt jwt,
                                                          @PathVariable Long id,

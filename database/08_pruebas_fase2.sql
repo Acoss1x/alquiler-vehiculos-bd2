@@ -66,6 +66,11 @@ BEGIN
     v_res := fn_crear_reserva(v_andres, v_veh1, NULL, v_sede1, v_sede1, current_date, current_date + 1, NULL);
     ASSERT (SELECT asesor_id_empleado FROM reserva WHERE id_reserva = v_res) IS NULL, 'La reserva debe nacer sin asesor';
 
+    RAISE NOTICE '--- 3b. Supuesto 17: el mismo cliente no puede reservar otro vehículo en fechas cruzadas';
+    PERFORM pg_temp.esperar_error(
+        format('SELECT fn_crear_reserva(%s,%s,NULL,%s,%s,current_date+1,current_date+2,NULL)', v_andres, v_veh2, v_sede1, v_sede1),
+        format('El cliente %s ya tiene una reserva activa', v_andres));
+
     RAISE NOTICE '--- 4. La entrega asigna el asesor';
     CALL sp_registrar_pago(v_res, fn_saldo_pendiente(v_res), 'TARJETA', 'APROBADO');
     PERFORM pg_temp.esperar_error(format('CALL sp_iniciar_reserva(%s)', v_res), 'no tiene asesor');
