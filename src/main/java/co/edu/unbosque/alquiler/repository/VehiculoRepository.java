@@ -14,10 +14,6 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
-/**
- * Los EntityGraph cargan categoría y sede en la misma consulta, para evitar el
- * problema N+1 al armar las respuestas.
- */
 @Repository
 public interface VehiculoRepository extends JpaRepository<Vehiculo, Long> {
 
@@ -43,11 +39,6 @@ public interface VehiculoRepository extends JpaRepository<Vehiculo, Long> {
     @EntityGraph(attributePaths = {"categoria", "sede"})
     Page<Vehiculo> findBySedeIdSedeAndEstado(Long idSede, String estado, Pageable pageable);
 
-    /**
-     * Llama a la función 'fn_vehiculos_disponibles' (RF-03): vehículos que no están
-     * en mantenimiento y no tienen otra reserva activa que se cruce con las fechas.
-     * Los filtros de categoría y sede son opcionales (null = sin filtro).
-     */
     @Query(value = """
             SELECT * FROM fn_vehiculos_disponibles(CAST(:fechaInicio AS date), CAST(:fechaFin AS date),
                                                    CAST(:idCategoria AS bigint), CAST(:idSede AS bigint))
@@ -57,11 +48,6 @@ public interface VehiculoRepository extends JpaRepository<Vehiculo, Long> {
                                      @Param("idCategoria") Long idCategoria,
                                      @Param("idSede") Long idSede);
 
-    /**
-     * Llama al procedimiento 'sp_registrar_vehiculo' en PostgreSQL.
-     * El motor valida la placa única y la capacidad de estacionamiento de la sede,
-     * y asigna el estado inicial DISPONIBLE.
-     */
     @Procedure(procedureName = "sp_registrar_vehiculo")
     void registrarVehiculo(
             @Param("p_placa") String placa,
@@ -73,18 +59,12 @@ public interface VehiculoRepository extends JpaRepository<Vehiculo, Long> {
             @Param("p_id_sede") Long idSede
     );
 
-    /**
-     * Llama al procedimiento 'sp_actualizar_estado_vehiculo' en PostgreSQL.
-     * Delega la validación de transiciones (ej. no alquilar un carro en
-     * mantenimiento) al motor relacional.
-     */
     @Procedure(procedureName = "sp_actualizar_estado_vehiculo")
     void actualizarEstadoVehiculo(
             @Param("p_id_vehiculo") Long idVehiculo,
             @Param("p_nuevo_estado") String nuevoEstado
     );
 
-    /** Procedimiento 'sp_actualizar_kilometraje_vehiculo': el kilometraje nunca baja. */
     @Procedure(procedureName = "sp_actualizar_kilometraje_vehiculo")
     void actualizarKilometrajeVehiculo(
             @Param("p_id_vehiculo") Long idVehiculo,

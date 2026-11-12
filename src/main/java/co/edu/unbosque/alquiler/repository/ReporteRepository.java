@@ -16,11 +16,6 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Consultas de reporte (RF-10) sobre PostgreSQL: JOIN, GROUP BY y funciones de agregación.
- * Son solo de lectura; las de MongoDB (daños, piezas, costo de mantenimiento) las aporta
- * InspeccionService.
- */
 @Repository
 public class ReporteRepository {
 
@@ -30,7 +25,6 @@ public class ReporteRepository {
         this.jdbc = jdbc;
     }
 
-    /** Todas las reservas de un vehículo, de la más reciente a la más antigua. */
     public List<ReservaHistorial> reservasDeVehiculo(Long idVehiculo) {
         String sql = """
                 SELECT r.id_reserva, r.estado_reserva, r.fecha_inicio, r.fecha_fin, r.costo_total,
@@ -57,7 +51,6 @@ public class ReporteRepository {
                 rs.getString("sede_recibe")));
     }
 
-    /** Suma de los pagos aprobados de todas las reservas del vehículo (los reembolsados no cuentan). */
     public BigDecimal ingresosDeVehiculo(Long idVehiculo) {
         String sql = """
                 SELECT COALESCE(SUM(p.monto), 0)
@@ -70,7 +63,6 @@ public class ReporteRepository {
         return total == null ? BigDecimal.ZERO : total;
     }
 
-    /** Penalizaciones por daños cobradas en las reservas del vehículo. */
     public List<PenalizacionResponse> penalizacionesDeVehiculo(Long idVehiculo) {
         String sql = """
                 SELECT pe.id_penalizacion, pe.reserva_id_reserva, pe.fecha_cargo, pe.concepto,
@@ -90,7 +82,6 @@ public class ReporteRepository {
                 rs.getString("id_inspeccion_mongo")));
     }
 
-    /** Vehículos por estado, incluyendo los estados en cero. {@code idSede} es opcional. */
     public List<FlotaEstadoResponse> estadoFlota(Long idSede) {
         String sql = """
                 SELECT e.estado, COUNT(v.id_vehiculo) AS cantidad
@@ -108,10 +99,6 @@ public class ReporteRepository {
                 rs.getLong("cantidad")));
     }
 
-    /**
-     * Ingresos (pagos aprobados) por sede de entrega, con rango opcional sobre la fecha de
-     * inicio de la reserva. Incluye las sedes sin ingresos.
-     */
     public List<IngresoSedeResponse> ingresosPorSede(LocalDate desde, LocalDate hasta) {
         String sql = """
                 SELECT s.id_sede, s.nombre_sede,
@@ -138,7 +125,6 @@ public class ReporteRepository {
                 rs.getLong("pagos_aprobados")));
     }
 
-    /** Seguros más contratados en reservas no canceladas, desde la tabla intermedia seg_res. */
     public List<SeguroRankingResponse> segurosMasContratados(int limite) {
         String sql = """
                 SELECT s.id_seguro, s.nombre_seguro,
@@ -159,7 +145,6 @@ public class ReporteRepository {
                 rs.getBigDecimal("valor")));
     }
 
-    /** Empleados activos por sede y rol, usando las tablas de la especialización de EMPLEADO. */
     public List<EmpleadosSedeResponse> empleadosPorSede() {
         String sql = """
                 SELECT s.id_sede, s.nombre_sede, x.rol, COUNT(*) AS cantidad

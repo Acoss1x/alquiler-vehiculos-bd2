@@ -8,14 +8,10 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
 
-/**
- * Tokens de recuperación de contraseña (tabla token_recuperacion). Solo se guarda el hash
- * del token; consumirlo es atómico, así que un enlace nunca sirve dos veces.
- */
+
 @Repository
 public class TokenRecuperacionRepository {
 
-    /** Cuenta a la que pertenece un token válido. */
     public record CuentaRef(String tipo, Long idCuenta) {
     }
 
@@ -25,7 +21,6 @@ public class TokenRecuperacionRepository {
         this.jdbc = jdbc;
     }
 
-    /** Crea un token nuevo e invalida los anteriores de la misma cuenta. */
     @Transactional
     public void crear(String tipo, Long idCuenta, String tokenHash, int minutosDeVida) {
         MapSqlParameterSource p = new MapSqlParameterSource()
@@ -40,7 +35,6 @@ public class TokenRecuperacionRepository {
                 + "VALUES (:tipo, :idCuenta, :hash, now() + make_interval(mins => :minutos))", p);
     }
 
-    /** Marca el token como usado y devuelve su cuenta; vacío si no existe, ya se usó o venció. */
     @Transactional
     public Optional<CuentaRef> consumir(String tokenHash) {
         List<CuentaRef> filas = jdbc.query(

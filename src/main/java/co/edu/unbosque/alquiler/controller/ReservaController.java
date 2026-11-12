@@ -27,10 +27,6 @@ import java.net.URI;
 import java.time.LocalDate;
 import java.util.List;
 
-/**
- * Los roles que pueden entrar a cada ruta se definen en SecurityConfig; aquí se aplican
- * las reglas de propiedad: un cliente solo ve y opera sobre sus propias reservas.
- */
 @RestController
 @RequestMapping("/api/reservas")
 public class ReservaController {
@@ -63,10 +59,7 @@ public class ReservaController {
         return reserva;
     }
 
-    /**
-     * Listado con filtros opcionales: {@code ?idCliente=1&estado=CONFIRMADA}.
-     * Un cliente siempre ve solo las suyas, sin importar el filtro que envíe.
-     */
+
     @GetMapping
     public Page<ReservaResumenResponse> listar(@AuthenticationPrincipal Jwt jwt,
                                                @RequestParam(required = false) Long idCliente,
@@ -76,9 +69,6 @@ public class ReservaController {
         return reservaService.listar(filtroCliente, estado, pageable);
     }
 
-    /**
-     * RF-07: {@code /api/reservas/cotizacion?idVehiculo=1&fechaInicio=2026-11-10&fechaFin=2026-11-12&idsSeguros=1,2}.
-     */
     @GetMapping("/cotizacion")
     public CotizacionResponse cotizar(
             @RequestParam Long idVehiculo,
@@ -94,7 +84,6 @@ public class ReservaController {
         return reservaService.listarPagos(id);
     }
 
-    /** Registra un pago (abono o saldo) y devuelve la reserva actualizada. */
     @PostMapping("/{id}/pagos")
     public ResponseEntity<ReservaResponse> registrarPago(@AuthenticationPrincipal Jwt jwt,
                                                          @PathVariable Long id,
@@ -103,7 +92,6 @@ public class ReservaController {
         return ResponseEntity.status(HttpStatus.CREATED).body(reservaService.registrarPago(id, request));
     }
 
-    /** Entrega del vehículo: un asesor solo puede registrarla a su propio nombre; un administrador, a nombre de cualquiera. */
     @PostMapping("/{id}/iniciar")
     public ReservaResponse iniciar(@AuthenticationPrincipal Jwt jwt, @PathVariable Long id,
                                    @Valid @RequestBody IniciarReservaRequest request) {
@@ -124,7 +112,6 @@ public class ReservaController {
         return reservaService.cancelar(id);
     }
 
-    /** Un cliente solo puede operar sobre sus reservas; el personal, sobre cualquiera. */
     private void exigirReservaPropia(Jwt jwt, Long idReserva) {
         if (Sesion.esCliente(jwt) && !reservaService.perteneceACliente(idReserva, Sesion.id(jwt))) {
             throw new AccessDeniedException("No tiene permisos sobre esta reserva");

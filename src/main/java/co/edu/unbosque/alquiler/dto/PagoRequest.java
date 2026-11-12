@@ -8,10 +8,7 @@ import jakarta.validation.constraints.Size;
 
 import java.math.BigDecimal;
 
-/**
- * Datos de entrada para registrar un pago (abono o saldo) de una reserva.
- * {@code estado} es el resultado del cobro: APROBADO o RECHAZADO.
- */
+
 public record PagoRequest(
         @NotNull @Positive BigDecimal monto,
         @NotBlank @Size(max = 30) String metodoPago,

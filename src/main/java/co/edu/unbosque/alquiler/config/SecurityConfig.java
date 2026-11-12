@@ -13,15 +13,7 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtGra
 import org.springframework.security.oauth2.server.resource.web.authentication.BearerTokenAuthenticationFilter;
 import org.springframework.security.web.SecurityFilterChain;
 
-/**
- * API sin sesión: cada petición lleva "Authorization: Bearer <token>".
- * El rol del token (claim "rol") se convierte en la autoridad ROLE_<rol>
- * (CLIENTE, ASESOR, TECNICO o ADMINISTRADOR).
- *
- * Aquí se define QUÉ ROLES entran a cada ruta; las reglas de propiedad (un cliente solo
- * ve lo suyo) se aplican en los controladores. Lo que no esté listado se rechaza
- * (denegado por defecto): al crear un endpoint nuevo hay que agregarlo aquí.
- */
+
 @Configuration
 public class SecurityConfig {
 

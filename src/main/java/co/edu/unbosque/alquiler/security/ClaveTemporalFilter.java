@@ -11,11 +11,6 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
-/**
- * Si el token indica que la clave es temporal (restablecida por un empleado),
- * solo deja consultar el perfil y cambiar la clave; todo lo demás se rechaza con 403
- * hasta que la persona defina su propia contraseña.
- */
 public class ClaveTemporalFilter extends OncePerRequestFilter {
 
     @Override

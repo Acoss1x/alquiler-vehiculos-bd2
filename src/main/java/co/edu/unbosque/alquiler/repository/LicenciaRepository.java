@@ -14,11 +14,6 @@ public interface LicenciaRepository extends JpaRepository<Licencia, Long> {
 
     Optional<Licencia> findByClienteIdCliente(Long idCliente);
 
-    /**
-     * Llama al procedimiento almacenado 'sp_registrar_licencia' en PostgreSQL.
-     * El motor valida que el cliente exista, que no tenga otra licencia
-     * y que las fechas sean coherentes y la licencia esté vigente.
-     */
     @Procedure(procedureName = "sp_registrar_licencia")
     void registrarLicencia(
             @Param("p_id_cliente") Long idCliente,

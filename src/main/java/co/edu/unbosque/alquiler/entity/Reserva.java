@@ -8,11 +8,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-/**
- * Entidad transaccional central del sistema.
- * Conecta al cliente, el vehículo, el asesor que la registra, las sedes de
- * entrega/recibo y los pagos.
- */
 @Entity
 @Table(name = "RESERVA")
 public class Reserva {
@@ -34,9 +29,6 @@ public class Reserva {
     @Column(name = "fecha_fin", nullable = false)
     private LocalDate fechaFin;
 
-    /**
-     * Precio pactado al momento de crear la reserva (se conserva como histórico).
-     */
     @Column(name = "costo_total", precision = 10, scale = 2)
     private BigDecimal costoTotal;
 
@@ -48,10 +40,6 @@ public class Reserva {
     @JoinColumn(name = "VEHICULO_id_vehiculo", nullable = false)
     private Vehiculo vehiculo;
 
-    /**
-     * Asesor que atiende la reserva. Es opcional: una reserva hecha por el propio
-     * cliente en la web nace sin asesor, y queda asignado al entregar el vehículo.
-     */
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ASESOR_id_empleado")
     private Asesor asesor;
@@ -64,10 +52,6 @@ public class Reserva {
     @JoinColumn(name = "sede_recibe", nullable = false)
     private Sede sedeRecibe;
 
-    /**
-     * Pagos de la reserva. Se registran vía procedimiento almacenado, por eso
-     * no hay cascada desde aquí.
-     */
     @OneToMany(mappedBy = "reserva", fetch = FetchType.LAZY)
     private List<Pago> pagos = new ArrayList<>();
 

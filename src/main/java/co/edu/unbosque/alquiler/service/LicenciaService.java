@@ -9,9 +9,6 @@ import co.edu.unbosque.alquiler.repository.LicenciaRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-/**
- * Casos de uso de la licencia de conducción de un cliente (relación 1:1).
- */
 @Service
 public class LicenciaService {
 

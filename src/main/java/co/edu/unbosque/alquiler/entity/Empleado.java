@@ -32,15 +32,9 @@ public abstract class Empleado {
     @Column(name = "correo", nullable = false, unique = true, length = 100)
     private String correo;
 
-    /**
-     * Hash BCrypt de la contraseña. Nunca se devuelve en las respuestas.
-     */
     @Column(name = "password_hash", nullable = false, length = 100)
     private String passwordHash;
 
-    /**
-     * TRUE si la clave es temporal y debe cambiarse al iniciar sesión.
-     */
     @Column(name = "debe_cambiar_clave", nullable = false)
     private boolean debeCambiarClave;
 

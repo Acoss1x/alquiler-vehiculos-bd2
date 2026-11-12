@@ -9,9 +9,7 @@ import jakarta.validation.constraints.Size;
 
 import java.math.BigDecimal;
 
-/**
- * Cargo por daños. {@code idInspeccion} es opcional: la inspección de Mongo que documenta el daño.
- */
+
 public record PenalizacionRequest(
         @NotBlank @Size(max = 200) String concepto,
         @NotNull @Positive @Digits(integer = 8, fraction = 2) BigDecimal monto,

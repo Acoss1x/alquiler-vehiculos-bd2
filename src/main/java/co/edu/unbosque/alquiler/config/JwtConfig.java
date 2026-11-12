@@ -15,11 +15,7 @@ import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
 
-/**
- * Firma y verifica los JWT con una clave secreta (HS256). El secreto NO va en el
- * repositorio: se define en application-local.properties (app.jwt.secret) o en la
- * variable de entorno APP_JWT_SECRET, y debe tener al menos 32 caracteres.
- */
+
 @Configuration
 public class JwtConfig {
 

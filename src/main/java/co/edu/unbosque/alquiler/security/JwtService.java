@@ -12,10 +12,6 @@ import org.springframework.stereotype.Service;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 
-/**
- * Emite los tokens de acceso (JWT firmado con HS256). El token lleva el id (sub),
- * el tipo de cuenta (CLIENTE o EMPLEADO), el rol y si la clave es temporal.
- */
 @Service
 public class JwtService {
 

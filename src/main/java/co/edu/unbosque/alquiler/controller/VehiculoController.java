@@ -40,10 +40,7 @@ public class VehiculoController {
         return ResponseEntity.created(ubicacion).body(creado);
     }
 
-    /**
-     * RF-03: vehículos disponibles para un rango de fechas, con filtros opcionales:
-     * {@code ?fechaInicio=2026-11-10&fechaFin=2026-11-12&idCategoria=2&idSede=1}.
-     */
+
     @GetMapping("/disponibles")
     public List<VehiculoResponse> disponibles(
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaInicio,
@@ -58,9 +55,7 @@ public class VehiculoController {
         return vehiculoService.obtenerPorId(id);
     }
 
-    /**
-     * Lista vehículos con filtros opcionales: {@code ?idSede=1&estado=DISPONIBLE}.
-     */
+
     @GetMapping
     public Page<VehiculoResponse> listar(@RequestParam(required = false) Long idSede,
                                          @RequestParam(required = false) EstadoVehiculo estado,
@@ -68,10 +63,6 @@ public class VehiculoController {
         return vehiculoService.listar(idSede, estado, pageable);
     }
 
-    /**
-     * Un técnico solo puede mandar un vehículo a mantenimiento o devolverlo a disponible;
-     * dar de baja o vender un vehículo es decisión del administrador.
-     */
     @PatchMapping("/{id}/estado")
     public VehiculoResponse cambiarEstado(@AuthenticationPrincipal Jwt jwt,
                                           @PathVariable Long id,

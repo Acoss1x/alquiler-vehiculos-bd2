@@ -11,9 +11,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-/**
- * Cambiar la tarifa NO afecta reservas existentes: su costo_total ya está congelado.
- */
 @Service
 public class CategoriaService {
 

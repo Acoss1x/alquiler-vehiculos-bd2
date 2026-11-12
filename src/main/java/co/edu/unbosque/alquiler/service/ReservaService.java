@@ -34,12 +34,6 @@ import java.util.stream.Collectors;
 import co.edu.unbosque.alquiler.document.TipoInspeccion;
 import co.edu.unbosque.alquiler.repository.InspeccionRepository;
 
-/**
- * Casos de uso de reservas y pagos. Las reglas de negocio (disponibilidad,
- * solapamientos, licencia vigente, transiciones de estado, suma de pagos) viven
- * en la base de datos; aquí solo se validan existencias para devolver un 404
- * claro y se arman las respuestas.
- */
 @Service
 public class ReservaService {
 
@@ -71,10 +65,6 @@ public class ReservaService {
         this.inspeccionRepository = inspeccionRepository;
     }
 
-    /**
-     * Crea la reserva en estado PENDIENTE. La función de BD devuelve el id.
-     * El asesor es opcional: una reserva hecha por el propio cliente nace sin asesor.
-     */
     @Transactional
     public ReservaResponse crear(ReservaRequest request) {
         validarExiste(clienteRepository.existsById(request.idCliente()), "cliente", request.idCliente());
@@ -132,7 +122,6 @@ public class ReservaService {
                 pagos);
     }
 
-    /** Listado paginado con filtros opcionales por cliente y estado. */
     @Transactional(readOnly = true)
     public Page<ReservaResumenResponse> listar(Long idCliente, EstadoReserva estado, Pageable pageable) {
         String nombreEstado = estado == null ? null : estado.name();
@@ -150,7 +139,6 @@ public class ReservaService {
         return pagina.map(this::aResumen);
     }
 
-    /** RF-07: cotización previa a la reserva, calculada por la función de BD. */
     @Transactional(readOnly = true)
     public CotizacionResponse cotizar(Long idVehiculo, LocalDate fechaInicio, LocalDate fechaFin,
                                       List<Long> idsSeguros) {
@@ -173,10 +161,6 @@ public class ReservaService {
                 .toList();
     }
 
-    /**
-     * Registra un pago. Si se aprueba y la reserva está PENDIENTE, queda CONFIRMADA;
-     * si se rechaza, la reserva se cancela para liberar el vehículo.
-     */
     @Transactional
     public ReservaResponse registrarPago(Long idReserva, PagoRequest request) {
         validarExiste(reservaRepository.existsById(idReserva), "reserva", idReserva);
@@ -188,10 +172,6 @@ public class ReservaService {
         return obtenerPorId(idReserva);
     }
 
-    /**
-     * CONFIRMADA -> EN_CURSO: entrega del vehículo al cliente por un asesor activo.
-     * Exige que antes se haya registrado la inspección de entrega (Mongo).
-     */
     @Transactional
     public ReservaResponse iniciar(Long idReserva, Long idAsesor) {
         validarExiste(reservaRepository.existsById(idReserva), "reserva", idReserva);
@@ -202,10 +182,6 @@ public class ReservaService {
         return obtenerPorId(idReserva);
     }
 
-    /**
-     * EN_CURSO -> FINALIZADA: devolución del vehículo; exige saldo en cero y la
-     * inspección de devolución (Mongo).
-     */
     @Transactional
     public ReservaResponse finalizar(Long idReserva) {
         validarExiste(reservaRepository.existsById(idReserva), "reserva", idReserva);
@@ -221,14 +197,12 @@ public class ReservaService {
         }
     }
 
-    /** Cancela una reserva PENDIENTE o CONFIRMADA y reembolsa los pagos aprobados. */
     @Transactional
     public ReservaResponse cancelar(Long idReserva) {
         validarExiste(reservaRepository.existsById(idReserva), "reserva", idReserva);
         reservaRepository.cancelarReserva(idReserva);
         return obtenerPorId(idReserva);
     }
-    /** ¿La reserva pertenece a ese cliente? Se usa para que un cliente solo opere sobre las suyas. */
     @Transactional(readOnly = true)
     public boolean perteneceACliente(Long idReserva, Long idCliente) {
         return reservaRepository.existsByIdReservaAndClienteIdCliente(idReserva, idCliente);
@@ -240,7 +214,6 @@ public class ReservaService {
         }
     }
 
-    /** Convierte [1, 2] en el literal de arreglo de PostgreSQL "{1,2}"; vacío o null -> null. */
     private String aArregloPostgres(List<Long> ids) {
         if (ids == null || ids.isEmpty()) {
             return null;

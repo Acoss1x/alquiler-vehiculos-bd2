@@ -25,20 +25,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
-/**
- * Inicio de sesión, registro, perfil y manejo de contraseñas. Las credenciales viven
- * en las tablas cliente y empleado; aquí solo se comparan hashes BCrypt y se emite el JWT.
- */
 @Service
 public class AuthService {
 
     private static final String TIPO_CLIENTE = "CLIENTE";
     private static final String TIPO_EMPLEADO = "EMPLEADO";
 
-    /**
-     * Hash de relleno: si el correo no existe se compara igual contra un hash, para
-     * que el tiempo de respuesta no delate qué correos están registrados.
-     */
     private static final String HASH_RELLENO = "$2a$10$W/iz47lH7LTk5APDAynlh.lHB/IjVv/VVryT5fgjGc7n293X7RYtu";
 
     private final ClienteRepository clienteRepository;
@@ -65,7 +57,6 @@ public class AuthService {
         this.entityManager = entityManager;
     }
 
-    /** Cuenta de acceso (cliente o empleado) con lo necesario para autenticar. */
     private record Cuenta(String tipo, String rol, Long id, String nombre, String correo,
                           String estado, String hash, boolean debeCambiarClave) {
 
@@ -92,7 +83,6 @@ public class AuthService {
         return emitir(cuenta);
     }
 
-    /** El cliente se registra por sí mismo (con licencia opcional) y queda con sesión iniciada. */
     @Transactional
     public LoginResponse registro(RegistroRequest request) {
         ClienteResponse creado = clienteService.registrar(request.cliente(), false);
@@ -107,7 +97,6 @@ public class AuthService {
         return buscarCuenta(tipo, id).aPerfil();
     }
 
-    /** Cambia la clave de quien está autenticado y devuelve un token nuevo (sin la marca de clave temporal). */
     @Transactional
     public LoginResponse cambiarClave(String tipo, Long id, CambiarClaveRequest request) {
         Cuenta cuenta = buscarCuenta(tipo, id);
@@ -118,13 +107,11 @@ public class AuthService {
             throw new SolicitudInvalidaException("La contraseña nueva debe ser distinta de la actual");
         }
         clienteRepository.cambiarClave(tipo, id, passwordEncoder.encode(request.claveNueva()), false);
-        // El procedimiento cambió la fila por SQL: se vacía la caché de JPA para releerla actualizada
-        // (si no, el token nuevo saldría con la marca de clave temporal anterior).
+
         entityManager.clear();
         return emitir(buscarCuenta(tipo, id));
     }
 
-    // ---------- Apoyo ----------
 
     private LoginResponse emitir(Cuenta cuenta) {
         PerfilResponse perfil = cuenta.aPerfil();

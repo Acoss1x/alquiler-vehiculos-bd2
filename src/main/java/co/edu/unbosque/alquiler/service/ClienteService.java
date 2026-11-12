@@ -12,10 +12,6 @@ import org.springframework.transaction.annotation.Transactional;
 import co.edu.unbosque.alquiler.dto.ClienteUpdateRequest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-/**
- * Casos de uso de cliente. Las escrituras con reglas de negocio se delegan
- * a la base de datos; las lecturas usan el repositorio.
- */
 @Service
 public class ClienteService {
 
@@ -40,10 +36,8 @@ public class ClienteService {
                 request.telefono(),
                 hash);
 
-        // El SP no devuelve el id: se consulta por el documento, que es único.
         ClienteResponse creado = buscarPorDocumento(request.numeroDocumento());
 
-        // Registrado por un empleado: la clave es temporal y el cliente debe cambiarla al entrar.
         if (claveTemporal) {
             clienteRepository.cambiarClave("CLIENTE", creado.idCliente(), hash, true);
         }

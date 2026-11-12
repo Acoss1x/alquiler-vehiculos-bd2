@@ -25,7 +25,6 @@ public class SedeController {
         this.sedeService = sedeService;
     }
 
-    /** Pública: solo sedes activas. {@code ?incluirInactivos=true} es solo para el administrador. */
     @GetMapping
     public List<SedeResponse> listar(@AuthenticationPrincipal Jwt jwt,
                                      @RequestParam(defaultValue = "false") boolean incluirInactivos) {

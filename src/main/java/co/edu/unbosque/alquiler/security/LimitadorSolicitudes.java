@@ -7,11 +7,6 @@ import java.util.Deque;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-/**
- * Limita cuántas solicitudes de recuperación se aceptan por correo en una ventana de tiempo
- * (evita que alguien use el sistema para llenar de correos la bandeja de otra persona).
- * Vive en memoria, así que se reinicia al reiniciar el backend.
- */
 @Component
 public class LimitadorSolicitudes {
 
@@ -21,7 +16,6 @@ public class LimitadorSolicitudes {
 
     private final Map<String, Deque<Long>> solicitudes = new ConcurrentHashMap<>();
 
-    /** Registra la solicitud y dice si se acepta (false = se superó el máximo en la ventana). */
     public boolean permitir(String clave) {
         if (solicitudes.size() > TAMANO_PARA_LIMPIAR) {
             solicitudes.values().removeIf(h -> {

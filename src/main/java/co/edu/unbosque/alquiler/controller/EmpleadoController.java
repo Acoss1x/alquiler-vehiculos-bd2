@@ -31,7 +31,7 @@ public class EmpleadoController {
         return ResponseEntity.created(ubicacion).body(creado);
     }
 
-    /** Ejemplo: {@code GET /api/empleados?tipo=ASESOR&idSede=1}. */
+
     @GetMapping
     public List<EmpleadoResponse> listar(@RequestParam(required = false) TipoEmpleado tipo,
                                          @RequestParam(required = false) Long idSede) {

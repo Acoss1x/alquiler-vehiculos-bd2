@@ -22,10 +22,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.util.List;
 
-/**
- * Hibernate inserta la fila de EMPLEADO y la del subtipo en la misma transacción,
- * por eso el trigger diferido de "especialización total" se cumple al COMMIT.
- */
 @Service
 public class EmpleadoService {
 
@@ -94,7 +90,6 @@ public class EmpleadoService {
         return aRespuesta(buscar(id));
     }
 
-    /** Filtros opcionales: tipo y sede. Sirve para llenar listas de asesores o técnicos. */
     @Transactional(readOnly = true)
     public List<EmpleadoResponse> listar(TipoEmpleado tipo, Long idSede) {
         List<? extends Empleado> empleados = tipo == null ? empleadoRepository.findAll() : porTipo(tipo);

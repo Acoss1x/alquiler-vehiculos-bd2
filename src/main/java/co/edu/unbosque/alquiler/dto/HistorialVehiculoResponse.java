@@ -4,11 +4,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
-/**
- * RF-10: historial consolidado de un vehículo para decidir su mantenimiento.
- * Junta datos de PostgreSQL (reservas, pagos, penalizaciones) y de MongoDB
- * (inspecciones, daños y piezas cambiadas).
- */
+
 public record HistorialVehiculoResponse(
         VehiculoResponse vehiculo,
         Resumen resumen,

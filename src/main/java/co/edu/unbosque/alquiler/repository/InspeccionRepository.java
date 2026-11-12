@@ -18,7 +18,6 @@ public interface InspeccionRepository extends MongoRepository<InspeccionVehiculo
 
     boolean existsByIdReservaAndTipo(Long idReserva, TipoInspeccion tipo);
 
-    /** Inspección que contiene esa foto (para comprobar permisos antes de descargarla). */
     @Query("{ 'fotos': ?0 }")
     Optional<InspeccionVehiculo> buscarPorFoto(String idFoto);
 }

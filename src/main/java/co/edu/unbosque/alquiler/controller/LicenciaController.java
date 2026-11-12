@@ -13,9 +13,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 
-/**
- * Un cliente solo puede registrar y consultar su propia licencia; el personal autorizado, la de cualquiera.
- */
+
 @RestController
 @RequestMapping("/api/clientes/{idCliente}/licencia")
 public class LicenciaController {

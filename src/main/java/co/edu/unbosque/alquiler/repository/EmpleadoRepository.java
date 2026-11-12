@@ -9,6 +9,5 @@ import java.util.Optional;
 @Repository
 public interface EmpleadoRepository extends JpaRepository<Empleado, Long> {
 
-    /** Búsqueda por correo sin distinguir mayúsculas (para el inicio de sesión). */
     Optional<Empleado> findByCorreoIgnoreCase(String correo);
 }

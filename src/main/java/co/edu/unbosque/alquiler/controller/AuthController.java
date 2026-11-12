@@ -20,9 +20,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-/**
- * Autenticación: login, registro y recuperación de clave por correo son públicos; el resto exige el token (Bearer).
- */
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
@@ -58,17 +55,14 @@ public class AuthController {
         return authService.cambiarClave(jwt.getClaimAsString("tipo"), Long.valueOf(jwt.getSubject()), request);
     }
 
-    /**
-     * Pública: envía al correo un enlace para restablecer la clave. Responde siempre 204, exista
-     * o no el correo, para no revelar qué correos están registrados.
-     */
+
     @PostMapping("/olvide-clave")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void olvideClave(@Valid @RequestBody OlvideClaveRequest request) {
         recuperacionService.olvideClave(request.correo());
     }
 
-    /** Pública: define la clave nueva con el token del enlace recibido por correo. */
+
     @PostMapping("/restablecer-clave")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void restablecerClave(@Valid @RequestBody RestablecerClaveRequest request) {

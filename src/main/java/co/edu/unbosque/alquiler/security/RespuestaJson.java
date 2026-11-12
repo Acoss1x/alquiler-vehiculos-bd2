@@ -5,11 +5,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.time.LocalDateTime;
 
-/**
- * Escribe errores HTTP con el mismo formato JSON de {@code ApiError} desde los
- * filtros de seguridad, donde todavía no actúa el manejador de excepciones de Spring MVC.
- * Los mensajes son constantes del código (sin comillas), por eso no se escapan.
- */
 public final class RespuestaJson {
 
     private RespuestaJson() {

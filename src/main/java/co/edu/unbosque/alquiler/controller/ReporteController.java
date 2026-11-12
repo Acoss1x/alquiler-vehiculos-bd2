@@ -16,11 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.time.LocalDate;
 import java.util.List;
 
-/**
- * RF-10. Los roles que entran a cada ruta se definen en SecurityConfig:
- * el historial de un vehículo y el estado de la flota, administrador y técnico;
- * el resto de reportes, solo el administrador.
- */
+
 @RestController
 @RequestMapping("/api/reportes")
 public class ReporteController {
@@ -31,19 +27,16 @@ public class ReporteController {
         this.reporteService = reporteService;
     }
 
-    /** Alquileres, inspecciones, daños, piezas y penalizaciones de un vehículo. */
     @GetMapping("/vehiculos/{idVehiculo}/historial")
     public HistorialVehiculoResponse historialVehiculo(@PathVariable Long idVehiculo) {
         return reporteService.historialVehiculo(idVehiculo);
     }
 
-    /** Vehículos por estado: {@code ?idSede=1} es opcional. */
     @GetMapping("/flota/estado")
     public List<FlotaEstadoResponse> estadoFlota(@RequestParam(required = false) Long idSede) {
         return reporteService.estadoFlota(idSede);
     }
 
-    /** Ingresos por sede de entrega: {@code ?desde=2026-10-01&hasta=2026-10-31}, ambos opcionales. */
     @GetMapping("/ingresos-por-sede")
     public List<IngresoSedeResponse> ingresosPorSede(
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate desde,
@@ -51,7 +44,6 @@ public class ReporteController {
         return reporteService.ingresosPorSede(desde, hasta);
     }
 
-    /** Ranking de seguros: {@code ?limite=5} (1 a 50, por defecto 10). */
     @GetMapping("/seguros-mas-contratados")
     public List<SeguroRankingResponse> segurosMasContratados(@RequestParam(defaultValue = "10") int limite) {
         return reporteService.segurosMasContratados(limite);

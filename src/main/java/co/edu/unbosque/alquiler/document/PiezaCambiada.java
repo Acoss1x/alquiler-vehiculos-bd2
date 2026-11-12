@@ -5,19 +5,13 @@ import org.springframework.data.mongodb.core.mapping.FieldType;
 
 import java.math.BigDecimal;
 
-/**
- * Subdocumento embebido en una inspección: una pieza cambiada.
- */
+
 public class PiezaCambiada {
 
     private String nombre;
 
     private Integer cantidad;
 
-    /**
-     * Se guarda como Decimal128. Por defecto Spring Data guarda BigDecimal como
-     * String, y con eso las agregaciones de suma no funcionan.
-     */
     @Field(targetType = FieldType.DECIMAL128)
     private BigDecimal costo;
 

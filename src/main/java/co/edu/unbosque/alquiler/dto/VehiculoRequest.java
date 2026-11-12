@@ -7,10 +7,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
 import jakarta.validation.constraints.Size;
 
-/**
- * Datos de entrada para registrar un vehículo. El estado inicial lo asigna el
- * procedimiento almacenado.
- */
+
 public record VehiculoRequest(
         @NotBlank @Size(max = 10) String placa,
         @NotBlank @Size(max = 50) String marca,

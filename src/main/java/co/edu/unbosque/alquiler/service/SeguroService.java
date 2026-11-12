@@ -11,10 +11,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-/**
- * Catálogo de seguros. Uno inactivo no se puede contratar en reservas nuevas
- * (lo hace cumplir la base de datos); las reservas existentes conservan el suyo.
- */
 @Service
 public class SeguroService {
 

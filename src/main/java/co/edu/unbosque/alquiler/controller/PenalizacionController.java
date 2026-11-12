@@ -16,10 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-/**
- * Los roles que entran a cada ruta se definen en SecurityConfig; aquí se aplica la
- * regla de propiedad: un cliente solo ve las penalizaciones de sus propias reservas.
- */
+
 @RestController
 @RequestMapping("/api")
 public class PenalizacionController {

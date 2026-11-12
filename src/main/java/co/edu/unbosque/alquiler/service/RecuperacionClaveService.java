@@ -25,11 +25,6 @@ import java.util.HexFormat;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
-/**
- * Recuperación de contraseña por correo: la persona pide un enlace, le llega a su correo
- * registrado y con él define una contraseña nueva. El enlace lleva un token aleatorio que
- * vence y solo se puede usar una vez (en la base solo se guarda su hash).
- */
 @Service
 public class RecuperacionClaveService {
 
@@ -38,7 +33,6 @@ public class RecuperacionClaveService {
     private static final String TIPO_CLIENTE = "CLIENTE";
     private static final String TIPO_EMPLEADO = "EMPLEADO";
 
-    /** Cuenta a la que se le envía el enlace. */
     private record Destino(String tipo, Long id, String nombre, String correo) {
     }
 
@@ -76,10 +70,6 @@ public class RecuperacionClaveService {
         this.mostrarEnlaceEnLog = mostrarEnlaceEnLog;
     }
 
-    /**
-     * Envía el enlace al correo si pertenece a una cuenta activa. No dice si el correo existe
-     * (la respuesta es siempre la misma) y limita las solicitudes por correo.
-     */
     public void olvideClave(String correoIngresado) {
         String direccion = correoIngresado.trim().toLowerCase();
         if (!limitador.permitir(direccion)) {
@@ -97,11 +87,9 @@ public class RecuperacionClaveService {
         if (mostrarEnlaceEnLog) {
             log.warn("[DESARROLLO] Enlace de recuperación para {}: {}", d.correo(), enlace);
         }
-        // En segundo plano: así la respuesta no tarda más cuando el correo sí existe.
         CompletableFuture.runAsync(() -> enviar(d, enlace));
     }
 
-    /** Define la contraseña nueva con el token del enlace; el token queda inutilizado. */
     @Transactional
     public void restablecer(RestablecerClaveRequest request) {
         CuentaRef cuenta = tokens.consumir(hash(request.token().trim()))
@@ -111,7 +99,6 @@ public class RecuperacionClaveService {
                 passwordEncoder.encode(request.claveNueva()), false);
     }
 
-    // ---------- Apoyo ----------
 
     private Optional<Destino> buscarActivo(String direccion) {
         Optional<Destino> cliente = clienteRepository.findByCorreoIgnoreCase(direccion)
@@ -146,7 +133,6 @@ public class RecuperacionClaveService {
         }
     }
 
-    /** 256 bits aleatorios, en Base64 apto para URL. */
     private String nuevoToken() {
         byte[] bytes = new byte[32];
         aleatorio.nextBytes(bytes);

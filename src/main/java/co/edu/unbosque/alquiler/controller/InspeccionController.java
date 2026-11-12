@@ -90,7 +90,6 @@ public class InspeccionController {
         return ResponseEntity.noContent().build();
     }
 
-    /** Sube una foto (campo multipart {@code archivo}); devuelve la inspección con su lista de fotos. */
     @PostMapping(path = "/{idInspeccion}/fotos", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<InspeccionResponse> subirFoto(@AuthenticationPrincipal Jwt jwt,
                                                         @PathVariable Long idVehiculo,

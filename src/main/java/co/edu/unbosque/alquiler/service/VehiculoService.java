@@ -17,10 +17,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.util.List;
 
-/**
- * Casos de uso de vehículo (PostgreSQL). Las escrituras con reglas de negocio
- * se delegan a procedimientos almacenados; las lecturas usan el repositorio.
- */
 @Service
 public class VehiculoService {
 

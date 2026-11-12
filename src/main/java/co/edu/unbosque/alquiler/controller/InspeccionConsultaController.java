@@ -35,7 +35,7 @@ public class InspeccionConsultaController {
         this.reservaService = reservaService;
     }
 
-    /** Ejemplo: {@code GET /api/inspecciones/buscar?pieza=freno&tipo=MANTENIMIENTO&desde=2026-01-01}. */
+
     @GetMapping("/buscar")
     public List<InspeccionResponse> buscar(
             @RequestParam(required = false) String pieza,
@@ -46,7 +46,7 @@ public class InspeccionConsultaController {
         return inspeccionService.buscar(pieza, idEmpleado, tipo, desde, hasta);
     }
 
-    /** Entrega y devolución de una reserva. Un cliente solo ve las de sus reservas. */
+
     @GetMapping("/reserva/{idReserva}")
     public List<InspeccionResponse> porReserva(@AuthenticationPrincipal Jwt jwt, @PathVariable Long idReserva) {
         if (Sesion.esCliente(jwt) && !reservaService.perteneceACliente(idReserva, Sesion.id(jwt))) {
@@ -55,7 +55,6 @@ public class InspeccionConsultaController {
         return inspeccionService.listarPorReserva(idReserva);
     }
 
-    /** Descarga una foto. Un cliente solo accede a las de inspecciones de sus reservas. */
     @GetMapping("/fotos/{idFoto}")
     public ResponseEntity<byte[]> foto(@AuthenticationPrincipal Jwt jwt, @PathVariable String idFoto) {
         InspeccionResponse inspeccion = inspeccionService.obtenerPorFoto(idFoto);   // 404 si ninguna la referencia

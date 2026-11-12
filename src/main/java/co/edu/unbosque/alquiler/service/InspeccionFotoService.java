@@ -22,10 +22,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import java.util.UUID;
 
-/**
- * Fotos de las inspecciones. El archivo se guarda en GridFS y el documento de la
- * inspección solo recibe su identificador.
- */
 @Service
 public class InspeccionFotoService {
 
@@ -34,7 +30,6 @@ public class InspeccionFotoService {
     private static final Map<String, String> EXTENSIONES =
             Map.of("image/jpeg", "jpg", "image/png", "png", "image/webp", "webp");
 
-    /** Contenido y tipo de una foto lista para descargar. */
     public record Archivo(byte[] datos, String tipoContenido) {
     }
 
@@ -83,7 +78,7 @@ public class InspeccionFotoService {
             borrarArchivo(id);
             throw ex;
         }
-        if (!agregada) {   // otra subida simultánea llenó el cupo
+        if (!agregada) {
             borrarArchivo(id);
             throw new SolicitudInvalidaException("Una inspección admite máximo " + MAX_FOTOS + " fotos");
         }
@@ -120,7 +115,6 @@ public class InspeccionFotoService {
         gridFsTemplate.delete(Query.query(Criteria.where("_id").is(id)));
     }
 
-    /** Reconoce JPEG, PNG y WebP por sus primeros bytes; null si no es ninguno. */
     private String tipoPorContenido(byte[] d) {
         if (d.length >= 3 && (d[0] & 0xFF) == 0xFF && (d[1] & 0xFF) == 0xD8 && (d[2] & 0xFF) == 0xFF) {
             return "image/jpeg";

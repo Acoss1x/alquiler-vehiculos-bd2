@@ -5,10 +5,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import jakarta.validation.constraints.Pattern;
 
-/**
- * Datos de entrada para registrar un cliente. No incluye id ni estado:
- * los asigna la base de datos.
- */
+
 public record ClienteRequest(
         @NotBlank @Size(max = 20) String numeroDocumento,
         @NotBlank @Size(max = 50) String primerNombre,

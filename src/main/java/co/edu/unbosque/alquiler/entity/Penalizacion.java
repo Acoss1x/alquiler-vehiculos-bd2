@@ -5,10 +5,6 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Objects;
 
-/**
- * Cargo por daños sobre una reserva. Solo se lee con JPA: crearlo y cambiar su
- * estado se hace con la función y el procedimiento de la base de datos.
- */
 @Entity
 @Table(name = "PENALIZACION")
 public class Penalizacion {
@@ -27,11 +23,9 @@ public class Penalizacion {
     @Column(name = "monto", nullable = false, precision = 10, scale = 2)
     private BigDecimal monto;
 
-    /** PENDIENTE, PAGADA o ANULADA. */
     @Column(name = "estado_cargo", nullable = false, length = 20)
     private String estadoCargo;
 
-    /** Referencia lógica a la inspección en MongoDB que documenta el daño. */
     @Column(name = "id_inspeccion_mongo", length = 24)
     private String idInspeccionMongo;
 

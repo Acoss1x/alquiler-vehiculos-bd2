@@ -16,10 +16,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-/**
- * Cargos por daños. Las reglas (estado de la reserva, monto, cambios de estado)
- * viven en la base de datos; aquí solo se comprueba lo que está en MongoDB.
- */
 @Service
 public class PenalizacionService {
 
@@ -53,7 +49,6 @@ public class PenalizacionService {
         return aRespuesta(penalizacionRepository.findById(id).orElseThrow());
     }
 
-    /** Comprueba en Mongo que la inspección exista y sea del mismo vehículo de la reserva. */
     private String validarInspeccion(String idInspeccion, Reserva reserva) {
         InspeccionVehiculo inspeccion = inspeccionRepository.findById(idInspeccion)
                 .orElseThrow(() -> new RecursoNoEncontradoException("No existe la inspección " + idInspeccion));

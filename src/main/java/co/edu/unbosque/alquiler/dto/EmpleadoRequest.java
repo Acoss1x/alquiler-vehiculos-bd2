@@ -12,9 +12,7 @@ import jakarta.validation.constraints.Pattern;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-/**
- * Los últimos cuatro campos dependen del tipo: el servicio exige el que corresponda.
- */
+
 public record EmpleadoRequest(
         @NotBlank @Size(max = 20) String numeroDocumento,
         @NotBlank @Size(max = 50) String primerNombre,

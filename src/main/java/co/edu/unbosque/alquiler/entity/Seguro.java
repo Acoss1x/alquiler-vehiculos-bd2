@@ -21,7 +21,6 @@ public class Seguro {
     @Column(name = "costo_diario", nullable = false, precision = 10, scale = 2)
     private BigDecimal costoDiario;
 
-    /** ACTIVO o INACTIVO. Un seguro inactivo no se puede contratar en reservas nuevas. */
     @Column(name = "estado", nullable = false, length = 15)
     private String estado = "ACTIVO";
 

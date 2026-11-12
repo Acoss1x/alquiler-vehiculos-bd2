@@ -21,7 +21,6 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
-/** RF-10: reportes que combinan PostgreSQL (transacciones) y MongoDB (inspecciones). */
 @Service
 @Transactional(readOnly = true)
 public class ReporteService {
@@ -40,7 +39,6 @@ public class ReporteService {
         this.inspeccionService = inspeccionService;
     }
 
-    /** Historial de alquileres, daños, revisiones y penalizaciones de un vehículo. */
     public HistorialVehiculoResponse historialVehiculo(Long idVehiculo) {
         VehiculoResponse vehiculo = vehiculoService.obtenerPorId(idVehiculo);
         List<ReservaHistorial> reservas = reporteRepository.reservasDeVehiculo(idVehiculo);

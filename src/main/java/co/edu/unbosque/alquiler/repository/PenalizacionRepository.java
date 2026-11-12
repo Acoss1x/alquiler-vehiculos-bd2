@@ -19,11 +19,9 @@ public interface PenalizacionRepository extends JpaRepository<Penalizacion, Long
     @EntityGraph(attributePaths = {"reserva"})
     List<Penalizacion> findByReservaIdReservaOrderByIdPenalizacionAsc(Long idReserva);
 
-    /** Todas las penalizaciones de un cliente (a través de sus reservas), las más recientes primero. */
     @EntityGraph(attributePaths = {"reserva"})
     List<Penalizacion> findByReservaClienteIdClienteOrderByIdPenalizacionDesc(Long idCliente);
 
-    /** Función 'fn_registrar_penalizacion': valida y devuelve el id del cargo creado. */
     @Query(value = """
             SELECT fn_registrar_penalizacion(CAST(:idReserva AS bigint), CAST(:concepto AS varchar),
                                              CAST(:monto AS numeric), CAST(:idInspeccion AS varchar))
@@ -33,7 +31,6 @@ public interface PenalizacionRepository extends JpaRepository<Penalizacion, Long
                    @Param("monto") BigDecimal monto,
                    @Param("idInspeccion") String idInspeccion);
 
-    /** Procedimiento 'sp_cambiar_estado_penalizacion': PENDIENTE -> PAGADA o ANULADA. */
     @Procedure(procedureName = "sp_cambiar_estado_penalizacion")
     void cambiarEstado(@Param("p_id_penalizacion") Long idPenalizacion,
                        @Param("p_estado") String estado);

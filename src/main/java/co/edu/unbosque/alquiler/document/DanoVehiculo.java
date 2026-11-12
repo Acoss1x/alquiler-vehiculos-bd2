@@ -1,8 +1,6 @@
 package co.edu.unbosque.alquiler.document;
 
-/**
- * Subdocumento embebido en una inspección: un daño encontrado en el vehículo.
- */
+
 public class DanoVehiculo {
 
     private String zona;

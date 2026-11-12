@@ -24,7 +24,6 @@ public class Sede {
     @Column(name = "capacidad_estacionamiento", nullable = false)
     private Integer capacidadEstacionamiento;
 
-    /** ACTIVO o INACTIVO. Una sede inactiva no se ofrece para reservar. */
     @Column(name = "estado", nullable = false, length = 15)
     private String estado = "ACTIVO";
 

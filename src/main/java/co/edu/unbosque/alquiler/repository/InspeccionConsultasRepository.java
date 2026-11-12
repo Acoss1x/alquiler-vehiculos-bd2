@@ -23,10 +23,6 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.regex.Pattern;
 
-/**
- * Consultas avanzadas sobre la colección de inspecciones: agregaciones,
- * búsqueda con filtros dinámicos y actualización con operadores de Mongo.
- */
 @Repository
 public class InspeccionConsultasRepository {
 
@@ -36,7 +32,6 @@ public class InspeccionConsultasRepository {
         this.mongoTemplate = mongoTemplate;
     }
 
-    /** $match → $unwind → $group: suma cantidad × costo de las piezas de un vehículo. */
     public BigDecimal costoTotalMantenimiento(Long idVehiculo) {
         Aggregation pipeline = Aggregation.newAggregation(
                 Aggregation.match(Criteria.where("idVehiculo").is(idVehiculo)),
@@ -51,7 +46,6 @@ public class InspeccionConsultasRepository {
         return resultado == null ? BigDecimal.ZERO : decimal(resultado.get("costoTotal"));
     }
 
-    /** $unwind → $group por nombre → $sort → $limit: ranking global de piezas. */
     public List<PiezaFrecuenciaResponse> piezasMasCambiadas(int limite) {
         Aggregation pipeline = Aggregation.newAggregation(
                 Aggregation.unwind("piezasCambiadas"),
@@ -70,7 +64,6 @@ public class InspeccionConsultasRepository {
                 .toList();
     }
 
-    /** $unwind → $group por técnico → $sort: cuánto gasta en piezas cada técnico. */
     public List<GastoTecnicoResponse> gastoPorTecnico() {
         Aggregation pipeline = Aggregation.newAggregation(
                 Aggregation.unwind("piezasCambiadas"),
@@ -88,7 +81,6 @@ public class InspeccionConsultasRepository {
                 .toList();
     }
 
-    /** Búsqueda con filtros opcionales: pieza (parcial, sin mayúsculas), empleado, tipo y rango de fechas. */
     public List<InspeccionVehiculo> buscar(String pieza, Long idEmpleado, TipoInspeccion tipo,
                                            LocalDate desde, LocalDate hasta) {
         Query query = new Query();
@@ -115,7 +107,6 @@ public class InspeccionConsultasRepository {
         return mongoTemplate.find(query, InspeccionVehiculo.class);
     }
 
-    /** $set de los campos editables: no reescribe el documento (así no pisa fotos agregadas al mismo tiempo). */
     public void actualizarContenido(String idInspeccion, String observaciones, NivelCombustible combustible,
                                     List<DanoVehiculo> danos, List<PiezaCambiada> piezas) {
         mongoTemplate.updateFirst(
@@ -128,7 +119,6 @@ public class InspeccionConsultasRepository {
                 InspeccionVehiculo.class);
     }
 
-    /** $push condicionado: solo agrega si aún no se llegó al máximo (operación atómica). */
     public boolean agregarFoto(String idInspeccion, String idFoto, int maximo) {
         UpdateResult resultado = mongoTemplate.updateFirst(
                 Query.query(Criteria.where("_id").is(idInspeccion).and("fotos." + (maximo - 1)).exists(false)),
@@ -144,7 +134,6 @@ public class InspeccionConsultasRepository {
                 InspeccionVehiculo.class);
     }
 
-    /** Operador $push: agrega una pieza sin reescribir el documento completo. */
     public boolean agregarPieza(String idInspeccion, PiezaCambiada pieza) {
         UpdateResult resultado = mongoTemplate.updateFirst(
                 Query.query(Criteria.where("_id").is(idInspeccion)),

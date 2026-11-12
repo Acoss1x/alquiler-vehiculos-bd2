@@ -18,10 +18,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 
-/**
- * Los roles que pueden entrar a cada ruta se definen en SecurityConfig; aquí se aplica
- * la regla de propiedad: un cliente solo puede ver y modificar sus propios datos.
- */
+
 @RestController
 @RequestMapping("/api/clientes")
 public class ClienteController {
@@ -32,7 +29,6 @@ public class ClienteController {
         this.clienteService = clienteService;
     }
 
-    /** Registro hecho por un empleado en el mostrador (el cliente que se registra solo usa /api/auth/registro). */
     @PostMapping
     public ResponseEntity<ClienteResponse> registrar(@Valid @RequestBody ClienteRequest request) {
         ClienteResponse creado = clienteService.registrar(request, true);

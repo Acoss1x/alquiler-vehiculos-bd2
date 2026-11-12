@@ -5,9 +5,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
-/**
- * Detalle completo de una reserva, con sus seguros, pagos y saldo pendiente.
- */
 public record ReservaResponse(
         Long idReserva,
         String estadoReserva,

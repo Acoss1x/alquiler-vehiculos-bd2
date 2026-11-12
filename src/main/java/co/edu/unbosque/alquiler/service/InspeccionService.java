@@ -36,11 +36,6 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Orquesta la lógica híbrida: la inspección vive en MongoDB (las fotos, en GridFS) y
- * el kilometraje y el estado del vehículo, en PostgreSQL. No hay transacción distribuida
- * entre ambos motores, por eso se aplica una compensación manual al registrar.
- */
 @Service
 public class InspeccionService {
 
@@ -70,11 +65,6 @@ public class InspeccionService {
         this.gridFsTemplate = gridFsTemplate;
     }
 
-    /**
-     * Primero se validan las reglas, luego Mongo y al final los procedimientos de PostgreSQL.
-     * Si un procedimiento falla (p. ej. kilometraje menor, o vehículo alquilado al mandarlo a
-     * mantenimiento), se borra el documento guardado y PostgreSQL revierte lo suyo.
-     */
     @Transactional
     public InspeccionResponse registrar(Long idVehiculo, Long idEmpleado, InspeccionRequest request) {
         validarVehiculo(idVehiculo);
@@ -143,7 +133,6 @@ public class InspeccionService {
         return obtener(idVehiculo, idInspeccion);
     }
 
-    /** No se elimina una inspección citada por una penalización; sus fotos se borran con ella. */
     public void eliminar(Long idVehiculo, String idInspeccion) {
         InspeccionVehiculo inspeccion = buscarDe(idVehiculo, idInspeccion);
         exigir(!penalizacionRepository.existsByIdInspeccionMongo(idInspeccion),
@@ -169,7 +158,6 @@ public class InspeccionService {
         return consultasRepository.gastoPorTecnico();
     }
 
-    // ---------- Validaciones ----------
 
     private void validarSegunTipo(Long idVehiculo, InspeccionRequest request) {
         if (request.tipo() == TipoInspeccion.MANTENIMIENTO) {
@@ -217,7 +205,6 @@ public class InspeccionService {
         }
     }
 
-    // ---------- Apoyo ----------
 
     private InspeccionVehiculo buscarDe(Long idVehiculo, String idInspeccion) {
         return inspeccionRepository.findById(idInspeccion)
