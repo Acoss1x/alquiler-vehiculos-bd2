@@ -1,0 +1,2634 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <title>Portafolio · Nataly Manrique Vera</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="icon" type="image/png"
+        href="https://img.freepik.com/vector-premium/vibrante-representacion-estilo-dibujos-animados-flor-cerezo_684903-1460.jpg?semt=ais_hybrid&w=740&q=80">
+
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600;700&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <style>
+        :root {
+            --plum: #4a2c6e;
+            --violet: #6b3fa0;
+            --lavender: #9b72cf;
+            --lilac: #c8a8e9;
+            --mist: #ede6f7;
+            --fog: #f7f3fc;
+            --white: #ffffff;
+            --ink: #1e0f2e;
+            --slate: #5c4875;
+            --shadow-sm: 0 2px 12px rgba(74, 44, 110, 0.10);
+            --shadow-md: 0 8px 32px rgba(74, 44, 110, 0.16);
+            --shadow-lg: 0 20px 60px rgba(74, 44, 110, 0.22);
+            --radius-sm: 10px;
+            --radius-md: 18px;
+            --radius-lg: 28px;
+            --transition: 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background-color: var(--fog);
+            background-image:
+                radial-gradient(ellipse 80% 60% at 10% 0%,
+                    rgba(155, 114, 207, 0.18) 0%,
+                    transparent 60%),
+                radial-gradient(ellipse 60% 50% at 90% 100%,
+                    rgba(107, 63, 160, 0.14) 0%,
+                    transparent 55%);
+            min-height: 100vh;
+            color: var(--ink);
+            overflow-x: hidden;
+        }
+
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--mist);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--lavender);
+            border-radius: 10px;
+        }
+
+        /* NAVEGACIÓN */
+
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 200;
+            height: 64px;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            padding: 0 48px;
+
+            background: rgba(247, 243, 252, 0.82);
+
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+
+            border-bottom: 1px solid rgba(155, 114, 207, 0.18);
+
+            transition: box-shadow var(--transition);
+        }
+
+        nav.scrolled {
+            box-shadow: var(--shadow-md);
+        }
+
+        .nav-logo {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--plum);
+            letter-spacing: 0.12em;
+            text-decoration: none;
+
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .nav-logo::before {
+            content: '';
+            width: 8px;
+            height: 8px;
+            background: var(--lavender);
+            border-radius: 50%;
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        nav ul li a {
+            font-size: 0.72rem;
+            font-weight: 500;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: var(--slate);
+            text-decoration: none;
+            padding: 7px 14px;
+            border-radius: 40px;
+            transition: all var(--transition);
+        }
+
+        nav ul li a:hover {
+            color: var(--violet);
+            background: rgba(155, 114, 207, 0.12);
+        }
+
+        .nav-hamburger {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            cursor: pointer;
+            padding: 4px;
+        }
+
+        .nav-hamburger span {
+            width: 22px;
+            height: 2px;
+            background: var(--violet);
+            border-radius: 2px;
+        }
+
+        /* HERO */
+
+        .hero {
+            min-height: 100vh;
+
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+
+            padding: 100px 24px 80px;
+
+            text-align: center;
+
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -120px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 700px;
+            height: 700px;
+
+            background: radial-gradient(circle,
+                    rgba(155, 114, 207, 0.22) 0%,
+                    transparent 65%);
+
+            pointer-events: none;
+
+            animation: heroGlow 8s ease-in-out infinite alternate;
+        }
+
+        @keyframes heroGlow {
+            from {
+                transform: translateX(-50%) scale(1);
+                opacity: 0.7;
+            }
+
+            to {
+                transform: translateX(-50%) scale(1.15);
+                opacity: 1;
+            }
+        }
+
+        .hero-photo-wrapper {
+            position: relative;
+            margin-bottom: 40px;
+            animation: fadeDown 0.9s ease both;
+        }
+
+        @keyframes fadeDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hero-ring {
+            position: absolute;
+            inset: -10px;
+            border-radius: 50%;
+
+            background: conic-gradient(from 0deg,
+                    var(--violet),
+                    var(--lilac),
+                    var(--lavender),
+                    var(--violet));
+
+            animation: spin 7s linear infinite;
+
+            z-index: 0;
+        }
+
+        .hero-ring-inner {
+            position: absolute;
+            inset: -3px;
+            border-radius: 50%;
+            background: var(--fog);
+            z-index: 1;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .hero-photo-wrapper img {
+            position: relative;
+            z-index: 2;
+
+            width: 170px;
+            height: 170px;
+
+            object-fit: cover;
+
+            border-radius: 50%;
+            border: 4px solid var(--white);
+
+            display: block;
+
+            box-shadow: var(--shadow-lg);
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+
+            background: rgba(155, 114, 207, 0.14);
+
+            border: 1px solid rgba(155, 114, 207, 0.35);
+            border-radius: 40px;
+
+            padding: 6px 18px;
+
+            font-size: 0.7rem;
+            font-weight: 600;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+
+            color: var(--violet);
+
+            margin-bottom: 18px;
+
+            animation: fadeUp 0.9s 0.1s ease both;
+        }
+
+        .hero h1 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(2.4rem, 6vw, 4rem);
+            font-weight: 700;
+            color: var(--plum);
+            line-height: 1.1;
+            margin-bottom: 16px;
+            animation: fadeUp 0.9s 0.2s ease both;
+        }
+
+        .hero-subtitle {
+            font-size: 0.92rem;
+            color: var(--slate);
+            letter-spacing: 0.04em;
+            max-width: 400px;
+            line-height: 1.7;
+            animation: fadeUp 0.9s 0.3s ease both;
+        }
+
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(18px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hero-divider {
+            width: 1px;
+            height: 56px;
+
+            background: linear-gradient(to bottom,
+                    var(--lavender),
+                    transparent);
+
+            margin: 32px auto 0;
+        }
+
+        /* ESTADÍSTICAS */
+
+        .stats-bar {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            padding: 0 24px 60px;
+        }
+
+        .stat-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 28px 44px;
+            position: relative;
+        }
+
+        .stat-item:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            right: 0;
+            top: 20%;
+            bottom: 20%;
+            width: 1px;
+            background: rgba(155, 114, 207, 0.25);
+        }
+
+        .stat-number {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 2.4rem;
+            font-weight: 700;
+            color: var(--violet);
+        }
+
+        .stat-label {
+            font-size: 0.7rem;
+            color: var(--slate);
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            margin-top: 6px;
+        }
+
+        /* VIDEO */
+
+        .video-section {
+            padding: 0 24px 80px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .video-card {
+            background: var(--white);
+
+            border-radius: var(--radius-lg);
+
+            padding: 16px;
+
+            box-shadow: var(--shadow-lg);
+
+            border: 1px solid rgba(155, 114, 207, 0.15);
+
+            position: relative;
+            overflow: hidden;
+
+            transition:
+                transform var(--transition),
+                box-shadow var(--transition);
+        }
+
+        .video-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+
+            background: linear-gradient(90deg,
+                    var(--violet),
+                    var(--lilac),
+                    var(--lavender));
+        }
+
+        .video-card:hover {
+            transform: translateY(-4px);
+        }
+
+        .video-card iframe {
+            border-radius: var(--radius-sm);
+            display: block;
+            max-width: 100%;
+        }
+
+        /* TECNOLOGÍAS */
+
+        .tech-section {
+            padding: 0 24px 80px;
+            max-width: 860px;
+            margin: 0 auto;
+        }
+
+        .tech-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            justify-content: center;
+        }
+
+        .tech-pill {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+
+            background: var(--white);
+
+            border: 1px solid rgba(155, 114, 207, 0.22);
+            border-radius: 40px;
+
+            padding: 10px 20px;
+
+            font-size: 0.8rem;
+            font-weight: 500;
+
+            color: var(--slate);
+
+            box-shadow: var(--shadow-sm);
+
+            transition: all var(--transition);
+
+            text-decoration: none;
+        }
+
+        .tech-pill i {
+            color: var(--violet);
+        }
+
+        .tech-pill:hover {
+            border-color: var(--lavender);
+            background: var(--mist);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+            color: var(--plum);
+        }
+
+        /* CONTENIDO */
+
+        .content {
+            max-width: 860px;
+            margin: 0 auto;
+            padding: 0 24px 100px;
+
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        details {
+            background: var(--white);
+            border-radius: var(--radius-md);
+            border: 1px solid rgba(155, 114, 207, 0.16);
+            box-shadow: var(--shadow-sm);
+            overflow: hidden;
+            transition: box-shadow var(--transition);
+        }
+
+        details:hover,
+        details[open] {
+            box-shadow: var(--shadow-md);
+        }
+
+        summary {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.08rem;
+            font-weight: 600;
+            color: var(--plum);
+
+            padding: 22px 28px;
+
+            cursor: pointer;
+            list-style: none;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+
+            user-select: none;
+
+            transition: background var(--transition);
+        }
+
+        summary::-webkit-details-marker {
+            display: none;
+        }
+
+        summary:hover {
+            background: rgba(155, 114, 207, 0.05);
+        }
+
+        .summary-icon {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+
+            background: rgba(155, 114, 207, 0.12);
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            color: var(--violet);
+
+            font-size: 0.8rem;
+
+            flex-shrink: 0;
+
+            transition: all var(--transition);
+        }
+
+        details[open]>.summary-icon {
+            transform: rotate(45deg);
+        }
+
+        .detail-body {
+            padding: 0 28px 26px;
+            border-top: 1px solid rgba(155, 114, 207, 0.1);
+        }
+
+        .detail-body p {
+            font-size: 0.92rem;
+            color: #4a3860;
+            line-height: 1.8;
+            padding-top: 18px;
+        }
+
+        .detail-body a {
+            color: var(--violet);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .detail-body details {
+            margin-top: 14px;
+            background: var(--fog);
+            border-radius: var(--radius-sm);
+            box-shadow: none;
+            border: 1px solid rgba(155, 114, 207, 0.14);
+        }
+
+        .detail-body details summary {
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.82rem;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--lavender);
+            padding: 14px 20px;
+        }
+
+        .detail-body details .detail-body {
+            padding: 0 20px 18px;
+        }
+
+        /* IMÁGENES */
+
+        img.modelo {
+            width: 160px;
+            height: 118px;
+            object-fit: cover;
+
+            border-radius: 12px;
+
+            cursor: pointer;
+
+            border: 2px solid rgba(155, 114, 207, 0.18);
+
+            transition: all var(--transition);
+
+            background: var(--white);
+
+            padding: 4px;
+
+            box-shadow: var(--shadow-sm);
+
+            display: block;
+
+            margin-top: 16px;
+        }
+
+        img.modelo:hover {
+            transform: scale(1.06) translateY(-3px);
+            box-shadow: var(--shadow-md);
+            border-color: var(--lavender);
+        }
+
+        /* BOTONES */
+
+        .link-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+
+            background: linear-gradient(135deg,
+                    var(--violet),
+                    var(--lavender));
+
+            color: var(--white) !important;
+
+            padding: 9px 20px;
+
+            border-radius: 40px;
+
+            font-size: 0.78rem;
+            font-weight: 600;
+
+            margin-top: 14px;
+
+            box-shadow: 0 4px 14px rgba(107, 63, 160, 0.3);
+
+            text-decoration: none;
+        }
+
+        .link-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        /* ARCHIVOS */
+
+        .file-card {
+            display: inline-flex;
+            align-items: center;
+            gap: 14px;
+
+            background: var(--fog);
+
+            border: 1px solid rgba(155, 114, 207, 0.22);
+            border-radius: var(--radius-sm);
+
+            padding: 14px 20px;
+
+            margin-top: 14px;
+
+            box-shadow: var(--shadow-sm);
+        }
+
+        .file-card-icon {
+            width: 42px;
+            height: 42px;
+
+            border-radius: 10px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            font-size: 1.1rem;
+        }
+
+        .file-card-icon.pdf {
+            background: rgba(220, 50, 50, 0.1);
+            color: #dc3232;
+        }
+
+        .file-card-icon.xls {
+            background: rgba(33, 150, 83, 0.1);
+            color: #21a053;
+        }
+
+        .file-card-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .file-card-name {
+            font-size: 0.84rem;
+            font-weight: 600;
+            color: var(--plum);
+        }
+
+        .file-card-sub {
+            font-size: 0.7rem;
+            color: var(--slate);
+            margin-top: 2px;
+        }
+
+        /* SEPARADORES */
+
+        .section-sep {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+
+            padding: 0 24px;
+
+            max-width: 860px;
+
+            margin: 0 auto 40px;
+        }
+
+        .section-sep span {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 0.9rem;
+            color: var(--lavender);
+            white-space: nowrap;
+            font-style: italic;
+        }
+
+        .section-sep::before,
+        .section-sep::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+
+            background: linear-gradient(to right,
+                    transparent,
+                    rgba(155, 114, 207, 0.3),
+                    transparent);
+        }
+
+        /* FOOTER */
+
+        footer {
+            background: var(--plum);
+
+            color: rgba(255, 255, 255, 0.55);
+
+            text-align: center;
+
+            padding: 48px 24px;
+        }
+
+        .footer-name {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--white);
+            margin-bottom: 6px;
+        }
+
+        .footer-role {
+            font-size: 0.75rem;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: var(--lilac);
+            margin-bottom: 24px;
+        }
+
+        .footer-divider {
+            width: 50px;
+            height: 1px;
+            background: rgba(155, 114, 207, 0.4);
+            margin: 0 auto 20px;
+        }
+
+        .footer-copy {
+            font-size: 0.72rem;
+            letter-spacing: 0.1em;
+            margin-top: 5px;
+        }
+
+        /* BOTÓN ARRIBA */
+
+        .scroll-top {
+            position: fixed;
+            bottom: 28px;
+            right: 28px;
+
+            width: 44px;
+            height: 44px;
+
+            border-radius: 50%;
+
+            background: linear-gradient(135deg,
+                    var(--violet),
+                    var(--lavender));
+
+            color: var(--white);
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            cursor: pointer;
+
+            box-shadow: 0 6px 20px rgba(107, 63, 160, 0.4);
+
+            opacity: 0;
+
+            transform: translateY(10px);
+
+            transition: all var(--transition);
+
+            z-index: 150;
+
+            border: none;
+        }
+
+        .scroll-top.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* RESPONSIVE */
+
+        @media (max-width: 700px) {
+
+            nav {
+                padding: 0 20px;
+            }
+
+            nav ul {
+                display: none;
+                flex-direction: column;
+
+                position: absolute;
+
+                top: 64px;
+                left: 0;
+                right: 0;
+
+                background: rgba(247, 243, 252, 0.97);
+
+                padding: 16px;
+            }
+
+            nav ul.open {
+                display: flex;
+            }
+
+            .nav-hamburger {
+                display: flex;
+            }
+
+            .stat-item {
+                padding: 20px 28px;
+            }
+
+            summary {
+                padding: 18px 20px;
+            }
+
+            .detail-body {
+                padding: 0 20px 20px;
+            }
+
+            img.modelo {
+                width: 130px;
+                height: 96px;
+            }
+
+            .video-card iframe {
+                width: 300px;
+                height: 188px;
+            }
+        }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(24px);
+
+            transition:
+                opacity 0.7s ease,
+                transform 0.7s ease;
+        }
+
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- NAVEGACIÓN -->
+
+    <nav id="mainNav">
+
+        <a class="nav-logo" href="#">
+            NMV · Portafolio
+        </a>
+
+        <ul id="navMenu">
+
+            <li>
+                <a href="#gustos">Gustos</a>
+            </li>
+
+            <li>
+                <a href="#hobbies">Hobbies</a>
+            </li>
+
+            <li>
+                <a href="#estudios">Estudios</a>
+            </li>
+
+            <li>
+                <a href="#universidad">Actividades</a>
+            </li>
+
+        </ul>
+
+        <div class="nav-hamburger"
+            id="hamburger"
+            onclick="toggleMenu()"
+            aria-label="Menú">
+
+            <span></span>
+            <span></span>
+            <span></span>
+
+        </div>
+
+    </nav>
+
+
+    <!-- PRESENTACIÓN -->
+
+    <section class="hero">
+
+        <div class="hero-photo-wrapper">
+
+            <div class="hero-ring"></div>
+
+            <div class="hero-ring-inner"></div>
+
+            <img
+                src="IMG_20260214_211805.jpg"
+                alt="Foto de Nataly">
+
+        </div>
+
+        <div class="hero-badge">
+
+            <i class="fa-solid fa-graduation-cap"></i>
+
+            Estudiante · Ingeniería de Sistemas
+
+        </div>
+
+        <h1>
+            Nataly Manrique Vera
+        </h1>
+
+        <p class="hero-subtitle">
+            Bienvenid@ a mi portafolio personal
+        </p>
+
+        <div class="hero-divider"></div>
+
+    </section>
+
+
+    <!-- ESTADÍSTICAS -->
+
+    <div class="stats-bar reveal">
+
+        <div class="stat-item">
+
+            <span class="stat-number">
+                4° y 5°
+            </span>
+
+            <span class="stat-label">
+                Semestre
+            </span>
+
+        </div>
+
+        <div class="stat-item">
+
+            <span class="stat-number">
+                7+
+            </span>
+
+            <span class="stat-label">
+                Modelos
+            </span>
+
+        </div>
+
+        <div class="stat-item">
+
+            <span class="stat-number">
+                2026
+            </span>
+
+            <span class="stat-label">
+                Período
+            </span>
+
+        </div>
+
+        <div class="stat-item">
+
+            <span class="stat-number">
+                ∞
+            </span>
+
+            <span class="stat-label">
+                Curiosidad
+            </span>
+
+        </div>
+
+    </div>
+
+
+    <!-- VIDEO CORREGIDO -->
+
+    <div class="video-section reveal">
+
+        <div class="video-card">
+
+            <iframe
+                width="360"
+                height="225"
+                src="https://www.youtube.com/embed/VcWlzqn9kXU"
+                title="Video de presentación"
+                frameborder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                referrerpolicy="strict-origin-when-cross-origin"
+                allowfullscreen>
+            </iframe>
+
+        </div>
+
+    </div>
+
+
+    <!-- TECNOLOGÍAS -->
+
+    <div class="section-sep reveal">
+
+        <span>
+            Tecnologías &amp; Herramientas
+        </span>
+
+    </div>
+
+
+    <div class="tech-section reveal">
+
+        <div class="tech-grid">
+
+            <div class="tech-pill">
+
+                <i class="fa-solid fa-database"></i>
+
+                Bases de Datos
+
+            </div>
+
+            <div class="tech-pill">
+
+                <i class="fa-solid fa-diagram-project"></i>
+
+                Modelado ER / ERE
+
+            </div>
+
+            <div class="tech-pill">
+
+                <i class="fa-solid fa-table"></i>
+
+                Normalización
+
+            </div>
+
+            <div class="tech-pill">
+
+                <i class="fa-solid fa-code"></i>
+
+                Álgebra Relacional
+
+            </div>
+
+            <div class="tech-pill">
+
+                <i class="fa-brands fa-microsoft"></i>
+
+                Excel
+
+            </div>
+
+            <div class="tech-pill">
+
+                <i class="fa-solid fa-pen-ruler"></i>
+
+                LucidChart
+
+            </div>
+
+            <a
+                href="https://github.com/nmanriqueve-hue"
+                target="_blank"
+                class="tech-pill">
+
+                <i class="fa-brands fa-github"></i>
+
+                GitHub
+
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <div class="section-sep reveal">
+
+        <span>
+            Conóceme
+        </span>
+
+    </div>
+
+
+    <!-- CONTENIDO -->
+
+    <div class="content">
+
+
+        <!-- GUSTOS -->
+
+        <details id="gustos" class="reveal">
+
+            <summary>
+
+                <span>
+
+                    <i
+                        class="fa-solid fa-heart"
+                        style="color:var(--lavender); margin-right:10px;">
+                    </i>
+
+                    Mis gustos
+
+                </span>
+
+                <div class="summary-icon">
+
+                    <i class="fa-solid fa-plus"></i>
+
+                </div>
+
+            </summary>
+
+
+            <div class="detail-body">
+
+                <details>
+
+                    <summary>
+
+                        <span>
+
+                            <i
+                                class="fa-solid fa-music"
+                                style="margin-right:8px;">
+                            </i>
+
+                            Música
+
+                        </span>
+
+                        <div class="summary-icon">
+
+                            <i class="fa-solid fa-plus"></i>
+
+                        </div>
+
+                    </summary>
+
+
+                    <div class="detail-body">
+
+                        <p>
+                            Mi música favorita es la música pop, un poco el rock en español e inglés y un poco la música mexicana.
+                        </p>
+
+                        <a
+                            class="link-btn"
+                            href="https://open.spotify.com/playlist/06hVzDSFUblvYGYqANEWEL?si=PipHBbOEQbGQun1sXEEQhA&pi=FMlsA5GYSn6l2"
+                            target="_blank">
+
+                            <i class="fa-brands fa-spotify"></i>
+
+                            Ver canciones favoritas
+
+                        </a>
+
+                    </div>
+
+                </details>
+
+            </div>
+
+        </details>
+
+
+        <!-- HOBBIES -->
+
+        <details id="hobbies" class="reveal">
+
+            <summary>
+
+                <span>
+
+                    <i
+                        class="fa-solid fa-gamepad"
+                        style="color:var(--lavender); margin-right:10px;">
+                    </i>
+
+                    Hobbies
+
+                </span>
+
+                <div class="summary-icon">
+
+                    <i class="fa-solid fa-plus"></i>
+
+                </div>
+
+            </summary>
+
+
+            <div class="detail-body">
+
+                <p>
+                    Me gusta mucho jugar videojuegos; algunos de mis favoritos son Minecraft, Slime Rancher, Counter-Strike, Valorant y Fornite entre otros.
+                </p>
+
+            </div>
+
+        </details>
+
+
+        <!-- ESTUDIOS -->
+
+        <details id="estudios" class="reveal">
+
+            <summary>
+
+                <span>
+
+                    <i
+                        class="fa-solid fa-building-columns"
+                        style="color:var(--lavender); margin-right:10px;">
+                    </i>
+
+                    Estudios
+
+                </span>
+
+                <div class="summary-icon">
+
+                    <i class="fa-solid fa-plus"></i>
+
+                </div>
+
+            </summary>
+
+
+            <div class="detail-body">
+
+                <details>
+
+                    <summary>
+
+                        <span>
+                            Universidad El Bosque
+                        </span>
+
+                        <div class="summary-icon">
+
+                            <i class="fa-solid fa-plus"></i>
+
+                        </div>
+
+                    </summary>
+
+
+                    <div class="detail-body">
+
+                        <p>
+                            Actualmente estudio Ingeniería de Sistemas en la Universidad El Bosque en 5 semestre.
+                        </p>
+
+                        <a
+                            class="link-btn"
+                            href="https://www.unbosque.edu.co/el-bosque-digital"
+                            target="_blank">
+
+                            <i class="fa-solid fa-arrow-up-right-from-square"></i>
+
+                            Más información
+
+                        </a>
+
+                    </div>
+
+                </details>
+
+            </div>
+
+        </details>
+
+
+        <!-- ACTIVIDADES -->
+
+        <details id="universidad" class="reveal">
+
+            <summary>
+
+                <span>
+
+                    <i
+                        class="fa-solid fa-folder-open"
+                        style="color:var(--lavender); margin-right:10px;">
+                    </i>
+
+                    Actividades trabajadas
+
+                </span>
+
+                <div class="summary-icon">
+
+                    <i class="fa-solid fa-plus"></i>
+
+                </div>
+
+            </summary>
+
+
+            <div class="detail-body">
+
+
+                <!-- BASES 1 -->
+
+                <details>
+
+                    <summary>
+
+                        <span>
+
+                            <i
+                                class="fa-solid fa-database"
+                                style="margin-right:8px;">
+                            </i>
+
+                            Bases1
+
+                        </span>
+
+                        <div class="summary-icon">
+
+                            <i class="fa-solid fa-plus"></i>
+
+                        </div>
+
+                    </summary>
+
+
+                    <div class="detail-body">
+
+
+                        <!-- MODELOS ER Y ERE -->
+
+                        <details>
+
+                            <summary>
+
+                                <span>
+                                    Modelos ER y ERE
+                                </span>
+
+                                <div class="summary-icon">
+
+                                    <i class="fa-solid fa-plus"></i>
+
+                                </div>
+
+                            </summary>
+
+
+                            <div class="detail-body">
+
+
+                                <!-- PRIMER MODELO -->
+
+                                <details>
+
+                                    <summary>
+
+                                        <span>
+                                            Primer Modelo
+                                        </span>
+
+                                        <div class="summary-icon">
+
+                                            <i class="fa-solid fa-plus"></i>
+
+                                        </div>
+
+                                    </summary>
+
+
+                                    <div class="detail-body">
+
+                                        <a
+                                            href="Modelo.png"
+                                            target="_blank">
+
+                                            <img
+                                                src="Modelo.png"
+                                                class="modelo"
+                                                alt="Primer modelo">
+
+                                        </a>
+
+                                        <p>
+                                            Este modelo entidad-relación representa un sistema de vuelos donde se relacionan las entidades VUELO, AVIÓN, PILOTO y TRIPULACIÓN. Cada entidad contiene información importante, como el número de vuelo, tipo de avión, código del piloto y datos de la tripulación.
+                                        </p>
+
+                                        <a
+                                            class="link-btn"
+                                            href="https://lucid.app/lucidchart/b617ad19-4648-406a-9fcb-a84fd3de18b1/edit?invitationId=inv_1222ef7b-c1c8-411a-a71b-e624bd7d92be&page=0_0#"
+                                            target="_blank">
+
+                                            <i class="fa-solid fa-arrow-up-right-from-square"></i>
+
+                                            Ver en LucidChart
+
+                                        </a>
+
+                                    </div>
+
+                                </details>
+
+
+                                <!-- SEGUNDO MODELO -->
+
+                                <details>
+
+                                    <summary>
+
+                                        <span>
+                                            Segundo Modelo
+                                        </span>
+
+                                        <div class="summary-icon">
+
+                                            <i class="fa-solid fa-plus"></i>
+
+                                        </div>
+
+                                    </summary>
+
+
+                                    <div class="detail-body">
+
+                                        <a
+                                            href="Segundo Modelo.png"
+                                            target="_blank">
+
+                                            <img
+                                                src="Segundo Modelo.png"
+                                                class="modelo"
+                                                alt="Segundo modelo">
+
+                                        </a>
+
+                                        <p>
+                                            Este modelo entidad-relación representa un sistema de visualización de contenido donde la entidad principal es USUARIO. El usuario puede ver contenido, realizar búsquedas y revisar un historial de visualización.
+                                        </p>
+
+                                        <a
+                                            class="link-btn"
+                                            href="https://lucid.app/lucidchart/46a9b657-e80f-4430-b576-bac90c07925b/edit?invitationId=inv_1876558f-378d-406e-bef5-d5447849c931&page=0_0#"
+                                            target="_blank">
+
+                                            <i class="fa-solid fa-arrow-up-right-from-square"></i>
+
+                                            Ver en LucidChart
+
+                                        </a>
+
+                                    </div>
+
+                                </details>
+
+
+                                <!-- TERCER MODELO -->
+
+                                <details>
+
+                                    <summary>
+
+                                        <span>
+                                            Tercer Modelo
+                                        </span>
+
+                                        <div class="summary-icon">
+
+                                            <i class="fa-solid fa-plus"></i>
+
+                                        </div>
+
+                                    </summary>
+
+
+                                    <div class="detail-body">
+
+                                        <a
+                                            href="Tercer Modelo.png"
+                                            target="_blank">
+
+                                            <img
+                                                src="Tercer Modelo.png"
+                                                class="modelo"
+                                                alt="Tercer modelo">
+
+                                        </a>
+
+                                        <p>
+                                            Este modelo entidad-relación representa un sistema de biblioteca donde las entidades principales son LIBRO y PERSONA. El sistema almacena información de los libros y permite gestionar préstamos.
+                                        </p>
+
+                                    </div>
+
+                                </details>
+
+
+                                <!-- 7 MODELOS -->
+
+                                <details>
+
+                                    <summary>
+
+                                        <span>
+                                            Actividad de los 7 Modelos
+                                        </span>
+
+                                        <div class="summary-icon">
+
+                                            <i class="fa-solid fa-plus"></i>
+
+                                        </div>
+
+                                    </summary>
+
+
+                                    <div class="detail-body">
+
+                                        <p>
+                                            Desarrollo de 7 ejercicios de modelos entidad-relación utilizando la notación Peter Chen. Los ejercicios incluyen diferentes contextos como universidades, hospitales y sistemas de ventas.
+                                        </p>
+
+                                        <a
+                                            class="link-btn"
+                                            href="https://lucid.app/lucidchart/962a097e-99e2-4f89-b140-e314c2bfbb7a/edit?invitationId=inv_8aa05caf-2ec0-4388-afae-c504fd0f3078&page=0_0#"
+                                            target="_blank">
+
+                                            <i class="fa-solid fa-arrow-up-right-from-square"></i>
+
+                                            Ver actividad
+
+                                        </a>
+
+                                    </div>
+
+                                </details>
+
+
+                                <!-- DOCUMENTOS 3 Y 4 -->
+
+                                <details>
+
+                                    <summary>
+
+                                        <span>
+                                            Actividad documentos 3 y 4
+                                        </span>
+
+                                        <div class="summary-icon">
+
+                                            <i class="fa-solid fa-plus"></i>
+
+                                        </div>
+
+                                    </summary>
+
+
+                                    <div class="detail-body">
+
+                                        <p>
+                                            Aplicación del modelo entidad-relación extendido en casos más complejos, utilizando conceptos como herencia, especialización y generalización.
+                                        </p>
+
+                                        <a
+                                            class="link-btn"
+                                            href="https://drive.google.com/file/d/16GkYBCcYToKFanovoifqXsEZK1g2svTW/view?usp=sharing"
+                                            target="_blank">
+
+                                            <i class="fa-brands fa-google-drive"></i>
+
+                                            Ver documento
+
+                                        </a>
+
+                                    </div>
+
+                                </details>
+
+
+                                <!-- TALLER GRUPAL -->
+
+                                <details>
+
+                                    <summary>
+
+                                        <span>
+                                            Primer Taller Grupal – Fase 1
+                                        </span>
+
+                                        <div class="summary-icon">
+
+                                            <i class="fa-solid fa-plus"></i>
+
+                                        </div>
+
+                                    </summary>
+
+
+                                    <div class="detail-body">
+
+
+                                        <!-- COMPANY -->
+
+                                        <details>
+
+                                            <summary>
+
+                                                <span>
+                                                    Company
+                                                </span>
+
+                                                <div class="summary-icon">
+
+                                                    <i class="fa-solid fa-plus"></i>
+
+                                                </div>
+
+                                            </summary>
+
+
+                                            <div class="detail-body">
+
+                                                <details>
+
+                                                    <summary>
+
+                                                        <span>
+                                                            Modelo Relacional Extendido
+                                                        </span>
+
+                                                        <div class="summary-icon">
+
+                                                            <i class="fa-solid fa-plus"></i>
+
+                                                        </div>
+
+                                                    </summary>
+
+
+                                                    <div class="detail-body">
+
+                                                        <a
+                                                            href="Empresa.jpg"
+                                                            target="_blank">
+
+                                                            <img
+                                                                src="Empresa.jpg"
+                                                                class="modelo"
+                                                                alt="Empresa">
+
+                                                        </a>
+
+                                                        <p>
+                                                            Este modelo representa un sistema empresarial donde se relacionan empleados, departamentos, proyectos y ubicaciones.
+                                                        </p>
+
+                                                    </div>
+
+                                                </details>
+
+
+                                                <details>
+
+                                                    <summary>
+
+                                                        <span>
+                                                            Conversión a tablas
+                                                        </span>
+
+                                                        <div class="summary-icon">
+
+                                                            <i class="fa-solid fa-plus"></i>
+
+                                                        </div>
+
+                                                    </summary>
+
+
+                                                    <div class="detail-body">
+
+                                                        <a
+                                                            href="REmpresat.jpg"
+                                                            target="_blank">
+
+                                                            <img
+                                                                src="Empresat.jpg"
+                                                                class="modelo"
+                                                                alt="Conversión Empresa">
+
+                                                        </a>
+
+                                                    </div>
+
+                                                </details>
+
+                                            </div>
+
+                                        </details>
+
+
+                                        <!-- COMIDAS RÁPIDAS -->
+
+                                        <details>
+
+                                            <summary>
+
+                                                <span>
+                                                    Comidas Rápidas
+                                                </span>
+
+                                                <div class="summary-icon">
+
+                                                    <i class="fa-solid fa-plus"></i>
+
+                                                </div>
+
+                                            </summary>
+
+
+                                            <div class="detail-body">
+
+                                                <details>
+
+                                                    <summary>
+
+                                                        <span>
+                                                            Modelo Relacional Extendido
+                                                        </span>
+
+                                                        <div class="summary-icon">
+
+                                                            <i class="fa-solid fa-plus"></i>
+
+                                                        </div>
+
+                                                    </summary>
+
+
+                                                    <div class="detail-body">
+
+                                                        <a
+                                                            href="Comida Rapida.jpg"
+                                                            target="_blank">
+
+                                                            <img
+                                                                src="Comida Rapida.jpg"
+                                                                class="modelo"
+                                                                alt="Comida rápida">
+
+                                                        </a>
+
+                                                        <p>
+                                                            Este modelo representa un sistema de pedidos para una pizzería, donde se gestionan clientes, pedidos, repartidores, promociones y artículos.
+                                                        </p>
+
+                                                    </div>
+
+                                                </details>
+
+
+                                                <details>
+
+                                                    <summary>
+
+                                                        <span>
+                                                            Conversión a tablas
+                                                        </span>
+
+                                                        <div class="summary-icon">
+
+                                                            <i class="fa-solid fa-plus"></i>
+
+                                                        </div>
+
+                                                    </summary>
+
+
+                                                    <div class="detail-body">
+
+                                                        <a
+                                                            href="Comida Rapidat.jpg"
+                                                            target="_blank">
+
+                                                            <img
+                                                                src="Comida Rapidat.jpg"
+                                                                class="modelo"
+                                                                alt="Conversión comida rápida">
+
+                                                        </a>
+
+                                                    </div>
+
+                                                </details>
+
+                                            </div>
+
+                                        </details>
+
+
+                                        <!-- RESIDUOS TÓXICOS -->
+
+                                        <details>
+
+                                            <summary>
+
+                                                <span>
+                                                    Residuos Tóxicos
+                                                </span>
+
+                                                <div class="summary-icon">
+
+                                                    <i class="fa-solid fa-plus"></i>
+
+                                                </div>
+
+                                            </summary>
+
+
+                                            <div class="detail-body">
+
+                                                <details>
+
+                                                    <summary>
+
+                                                        <span>
+                                                            Modelo Relacional Extendido
+                                                        </span>
+
+                                                        <div class="summary-icon">
+
+                                                            <i class="fa-solid fa-plus"></i>
+
+                                                        </div>
+
+                                                    </summary>
+
+
+                                                    <div class="detail-body">
+
+                                                        <a
+                                                            href="Residuos Toxicos.jpg"
+                                                            target="_blank">
+
+                                                            <img
+                                                                src="Residuos Toxicos.jpg"
+                                                                class="modelo"
+                                                                alt="Residuos tóxicos">
+
+                                                        </a>
+
+                                                        <p>
+                                                            Este modelo representa un sistema de gestión de residuos donde intervienen empresas productoras y transportistas.
+                                                        </p>
+
+                                                    </div>
+
+                                                </details>
+
+
+                                                <details>
+
+                                                    <summary>
+
+                                                        <span>
+                                                            Conversión a tablas
+                                                        </span>
+
+                                                        <div class="summary-icon">
+
+                                                            <i class="fa-solid fa-plus"></i>
+
+                                                        </div>
+
+                                                    </summary>
+
+
+                                                    <div class="detail-body">
+
+                                                        <a
+                                                            href="Residuos Toxicost.jpg"
+                                                            target="_blank">
+
+                                                            <img
+                                                                src="Residuos Toxicost.jpg"
+                                                                class="modelo"
+                                                                alt="Conversión residuos tóxicos">
+
+                                                        </a>
+
+                                                    </div>
+
+                                                </details>
+
+                                            </div>
+
+                                        </details>
+
+                                    </div>
+
+                                </details>
+
+                            </div>
+
+                        </details>
+
+
+                        <!-- NORMALIZACIÓN -->
+
+                        <details>
+
+                            <summary>
+
+                                <span>
+                                    Taller de Normalización
+                                </span>
+
+                                <div class="summary-icon">
+
+                                    <i class="fa-solid fa-plus"></i>
+
+                                </div>
+
+                            </summary>
+
+
+                            <div class="detail-body">
+
+                                <p>
+                                    Este trabajo de normalización se enfoca en la organización y optimización de bases de datos mediante la aplicación de las formas normales.
+                                </p>
+
+
+                                <!-- PDF -->
+
+                                <details>
+
+                                    <summary>
+
+                                        <span>
+                                            PDF
+                                        </span>
+
+                                        <div class="summary-icon">
+
+                                            <i class="fa-solid fa-plus"></i>
+
+                                        </div>
+
+                                    </summary>
+
+
+                                    <div class="detail-body">
+
+                                        <a
+                                            class="file-card"
+                                            href="Taller_Avanzado_Normalizacion_A (1).pdf"
+                                            download>
+
+                                            <div class="file-card-icon pdf">
+
+                                                <i class="fa-solid fa-file-pdf"></i>
+
+                                            </div>
+
+                                            <div class="file-card-info">
+
+                                                <span class="file-card-name">
+                                                    Taller de Normalización
+                                                </span>
+
+                                                <span class="file-card-sub">
+                                                    Descargar PDF
+                                                </span>
+
+                                            </div>
+
+                                        </a>
+
+
+                                        <a
+                                            href="Taller_Avanzado_Normalizacion_A (1).pdf"
+                                            download>
+
+                                            <img
+                                                src="pdf.png"
+                                                class="modelo"
+                                                alt="PDF Taller Normalización">
+
+                                        </a>
+
+                                    </div>
+
+                                </details>
+
+
+                                <!-- EXCEL -->
+
+                                <details>
+
+                                    <summary>
+
+                                        <span>
+                                            Excel
+                                        </span>
+
+                                        <div class="summary-icon">
+
+                                            <i class="fa-solid fa-plus"></i>
+
+                                        </div>
+
+                                    </summary>
+
+
+                                    <div class="detail-body">
+
+                                        <a
+                                            class="file-card"
+                                            href="Taller_Avanzado_Normalizacion_A.xlsx"
+                                            download>
+
+                                            <div class="file-card-icon xls">
+
+                                                <i class="fa-solid fa-file-excel"></i>
+
+                                            </div>
+
+                                            <div class="file-card-info">
+
+                                                <span class="file-card-name">
+                                                    Taller de Normalización
+                                                </span>
+
+                                                <span class="file-card-sub">
+                                                    Descargar Excel
+                                                </span>
+
+                                            </div>
+
+                                        </a>
+
+
+                                        <a
+                                            href="Taller_Avanzado_Normalizacion_A.xlsx"
+                                            download>
+
+                                            <img
+                                                src="excel.png"
+                                                class="modelo"
+                                                alt="Excel Taller Normalización">
+
+                                        </a>
+
+                                        <p>
+                                            A través de distintos ejercicios se identifican redundancias y dependencias innecesarias para mejorar la estructura de las tablas.
+                                        </p>
+
+                                        <a
+                                            class="link-btn"
+                                            href="https://unbosqueeduco-my.sharepoint.com/:x:/g/personal/gpovedaga_unbosque_edu_co/IQD61SLMV5sdQb1aSNGs0xqfAXxEOTrbXn6wv9MxqNLjqlM?e=PnjuT7"
+                                            target="_blank">
+
+                                            <i class="fa-solid fa-arrow-up-right-from-square"></i>
+
+                                            Ver actividad
+
+                                        </a>
+
+                                    </div>
+
+                                </details>
+
+                            </div>
+
+                        </details>
+
+
+                        <!-- ÁLGEBRA RELACIONAL -->
+
+                        <details>
+
+                            <summary>
+
+                                <span>
+                                    Álgebra Relacional
+                                </span>
+
+                                <div class="summary-icon">
+
+                                    <i class="fa-solid fa-plus"></i>
+
+                                </div>
+
+                            </summary>
+
+
+                            <div class="detail-body">
+
+                                <p>
+                                    En esta actividad se desarrollaron ejercicios de álgebra relacional aplicando operaciones como selección, proyección, unión, diferencia y joins. Los ejercicios permitieron comprender cómo consultar y manipular información dentro de bases de datos relacionales mediante expresiones formales.
+                                </p>
+
+
+                                <details>
+
+                                    <summary>
+
+                                        <span>
+                                            Ejercicios
+                                        </span>
+
+                                        <div class="summary-icon">
+
+                                            <i class="fa-solid fa-plus"></i>
+
+                                        </div>
+
+                                    </summary>
+
+
+                                    <div class="detail-body">
+
+                                        <a
+                                            class="file-card"
+                                            href="algebrarelacional.pdf"
+                                            target="_blank">
+
+                                            <div class="file-card-icon pdf">
+
+                                                <i class="fa-solid fa-file-pdf"></i>
+
+                                            </div>
+
+                                            <div class="file-card-info">
+
+                                                <span class="file-card-name">
+                                                    Álgebra Relacional
+                                                </span>
+
+                                                <span class="file-card-sub">
+                                                    Ver PDF
+                                                </span>
+
+                                            </div>
+
+                                        </a>
+
+                                    </div>
+
+                                </details>
+
+                            </div>
+
+                        </details>
+
+
+                        <!-- PROYECTO GEOQUEST -->
+
+                        <details>
+
+                            <summary>
+
+                                <span>
+                                    Proyecto GeoQuest
+                                </span>
+
+                                <div class="summary-icon">
+
+                                    <i class="fa-solid fa-plus"></i>
+
+                                </div>
+
+                            </summary>
+
+
+                            <div class="detail-body">
+
+                                <p>
+                                    GeoQuest es un proyecto académico desarrollado como una plataforma interactiva enfocada en el aprendizaje de geografía de manera dinámica y entretenida. El sistema permite a los usuarios poner a prueba sus conocimientos sobre países, capitales, banderas y continentes mediante diferentes modos de juego y preguntas. Además, el proyecto integra bases de datos, modelado relacional y desarrollo web para ofrecer una experiencia educativa organizada, intuitiva y atractiva para los usuarios, toda su documenta desarrollo y trabajo lo puedes encontrar en el repositorio de github.
+                                </p>
+
+                                <a
+                                    class="link-btn"
+                                    href="https://github.com/isabellard/Geoquest#geoquest"
+                                    target="_blank">
+
+                                    <i class="fa-brands fa-github"></i>
+
+                                    Backend
+
+                                </a>
+
+
+                                <a
+                                    class="link-btn"
+                                    href="https://github.com/isabellard/GeoquestFront"
+                                    target="_blank">
+
+                                    <i class="fa-brands fa-github"></i>
+
+                                    Frontend
+
+                                </a>
+
+                            </div>
+
+                        </details>
+
+                    </div>
+
+                </details>
+
+
+                <!-- BASES 2 -->
+                <details>
+                    <summary>
+                        <span><i class="fa-solid fa-database" style="margin-right:8px;"></i> Bases2</span>
+                        <div class="summary-icon"><i class="fa-solid fa-plus"></i></div>
+                    </summary>
+                    <div class="detail-body">
+                        <p>En Bases de Datos II reuní actividades de SQL avanzado, PL/SQL, MongoDB y el proyecto final. Cada tema incluye su contexto, lo desarrollado y los archivos originales que respaldan el aprendizaje.</p>
+                        <!-- SQL -->
+                        <details>
+ <summary><span>SQL</span><div class="summary-icon"><i class="fa-solid fa-plus"></i></div></summary>
+ <div class="detail-body">
+  <p>En esta sección reúno actividades de SQL avanzado relacionadas con transacciones, concurrencia, bloqueos y optimización de consultas en Oracle.</p>
+<details>
+ <summary><span>Concurrencia y transacciones · Banco Andino</span><div class="summary-icon"><i class="fa-solid fa-plus"></i></div></summary>
+ <div class="detail-body">
+  <p><strong>Objetivo:</strong> Analizar cómo las transacciones simultáneas afectan los saldos y aplicar mecanismos de control para mantener la consistencia de la información.</p>
+<p><strong>Contexto:</strong> El caso Banco Andino simula operaciones sobre cuentas y transferencias ejecutadas desde dos conexiones de Oracle. El ejercicio inicial plantea dos retiros sobre la cuenta 1001, realizados por sesiones distintas.</p>
+<p><strong>Desarrollo:</strong> Trabajé con los scripts de las sesiones A y B, alternando los pasos indicados. Se comparan actualizaciones directas, bloqueo pesimista con <strong>SELECT ... FOR UPDATE</strong>, control optimista por versión y distribución de tareas mediante <strong>SKIP LOCKED</strong>. También se examinan los bloqueos asociados a llaves foráneas sin índice y los interbloqueos entre transferencias cruzadas.</p>
+<pre style="white-space:pre-wrap;overflow-wrap:anywhere;margin-top:14px;padding:14px 16px;border-radius:10px;background:var(--white);border:1px solid rgba(155,114,207,.22);color:var(--plum);font:0.78rem/1.6 'DM Mono',monospace"><code>SELECT id_cuenta, saldo
+FROM cuenta
+WHERE id_cuenta = 1001
+FOR UPDATE;</code></pre>
+<p><strong>Resultados:</strong> En el caso de actualización perdida quedó registrado un saldo de <strong>$800.000</strong> cuando, tras retiros de $300.000 y $200.000 sobre $1.000.000, debía ser <strong>$500.000</strong>. Con el bloqueo pesimista y el descuento sobre el saldo vigente, el ejercicio muestra el resultado esperado de $500.000.</p>
+<p><strong>Aprendizajes:</strong> Comprendí que bloquear una fila no basta cuando una aplicación escribe un valor calculado con una lectura desactualizada. También identifiqué la importancia de revisar filas afectadas, orden de adquisición de bloqueos y aislamiento de transacciones.</p>
+<a class="file-card" href="evidencias/bases-de-datos-ii/sql/01_sesion_A.sql" download>
+  <div class="file-card-icon " style="background:rgba(155,114,207,.12);color:var(--violet)"><i class="fa-solid fa-code"></i></div>
+  <div class="file-card-info"><span class="file-card-name">Banco Andino · Sesión A</span><span class="file-card-sub">Descargar script SQL</span></div>
+</a>
+<a class="file-card" href="evidencias/bases-de-datos-ii/sql/01_sesion_B.sql" download>
+  <div class="file-card-icon " style="background:rgba(155,114,207,.12);color:var(--violet)"><i class="fa-solid fa-code"></i></div>
+  <div class="file-card-info"><span class="file-card-name">Banco Andino · Sesión B</span><span class="file-card-sub">Descargar script SQL</span></div>
+</a>
+ </div>
+</details>
+<details>
+ <summary><span>Diagnóstico y optimización SQL</span><div class="summary-icon"><i class="fa-solid fa-plus"></i></div></summary>
+ <div class="detail-body">
+  <p><strong>Objetivo:</strong> Identificar defectos de concurrencia, transaccionalidad y rendimiento en operaciones bancarias, y reconocer oportunidades de optimización SQL.</p>
+<p><strong>Contexto:</strong> El documento complementa la simulación de Banco Andino mediante un diagnóstico de lecturas y escrituras del saldo, confirmaciones parciales de transferencias y ausencia de verificaciones sobre las filas afectadas.</p>
+<p><strong>Desarrollo:</strong> Se describieron los riesgos de hacer <strong>COMMIT</strong> entre el débito y el crédito y se evaluó un filtro de fecha, sustituyendo <strong>TO_CHAR</strong> por un rango de fechas y probando índices adicionales.</p>
+<p><strong>Resultado documentado:</strong> El plan de ejecución conservó <strong>TABLE ACCESS FULL</strong>, pero los <strong>consistent gets</strong> disminuyeron de <strong>2259 a 2248</strong>. La mejora fue pequeña y quedó sustentada en el análisis entregado.</p>
+<p><strong>Aprendizajes:</strong> Aprendí a distinguir la consistencia de los datos de la eficiencia de una consulta y a justificar ajustes de SQL a partir de métricas, no solamente de la forma de escribir la sentencia.</p>
+<a class="file-card" href="evidencias/bases-de-datos-ii/sql/bases.documento-preguntas.pdf" target="_blank" rel="noopener noreferrer">
+  <div class="file-card-icon pdf" ><i class="fa-solid fa-file-pdf"></i></div>
+  <div class="file-card-info"><span class="file-card-name">Diagnóstico y preguntas · Banco Andino</span><span class="file-card-sub">Ver documento PDF</span></div>
+</a>
+ </div>
+</details>
+ </div>
+</details>
+                        <!-- PL/SQL SCRIPTS -->
+                        <details>
+ <summary><span>PL/SQL Scripts</span><div class="summary-icon"><i class="fa-solid fa-plus"></i></div></summary>
+ <div class="detail-body">
+  <p>El laboratorio documenta el uso de triggers compuestos, variables compartidas, procedimientos, funciones y bloques de prueba en PL/SQL.</p>
+<details>
+ <summary><span>Trigger compuesto y validaciones PL/SQL</span><div class="summary-icon"><i class="fa-solid fa-plus"></i></div></summary>
+ <div class="detail-body">
+  <p><strong>Objetivo:</strong> Resolver el error <strong>ORA-04091</strong> que se presenta cuando un trigger de fila intenta consultar la misma tabla que está siendo modificada.</p>
+<p><strong>Contexto:</strong> En un modelo de pedidos y líneas de pedido se requiere mantener actualizado el total a partir de la suma de cantidades y precios. Un trigger convencional intenta recalcular ese valor mientras la tabla de líneas sigue cambiando.</p>
+<p><strong>Desarrollo:</strong> El laboratorio primero reproduce el escenario de tabla mutante y después define un <strong>compound trigger</strong>. La sección <strong>AFTER EACH ROW</strong> registra los pedidos afectados; en <strong>AFTER STATEMENT</strong>, una vez completada la sentencia, se calcula el total de cada pedido. Una colección asociativa evita repetir el recálculo del mismo pedido.</p>
+<pre style="white-space:pre-wrap;overflow-wrap:anywhere;margin-top:14px;padding:14px 16px;border-radius:10px;background:var(--white);border:1px solid rgba(155,114,207,.22);color:var(--plum);font:0.78rem/1.6 'DM Mono',monospace"><code>AFTER EACH ROW IS
+BEGIN
+  IF :NEW.id_pedido IS NOT NULL THEN
+    v_ids(:NEW.id_pedido) := 1;
+  END IF;
+END AFTER EACH ROW;</code></pre>
+<p><strong>Validación:</strong> El script incluye bloques PL/SQL, el procedimiento local <strong>sp_chk</strong> y las funciones <strong>fn_total</strong> y <strong>fn_recalculos</strong> para comprobar cinco escenarios (T1–T5): actualización, inserción, modificaciones múltiples, eliminación y cambio de pedido.</p>
+<p><strong>Resultados planteados:</strong> Las comprobaciones incluidas contemplan, entre otros casos, un total de <strong>280.000</strong> tras T1, <strong>600.000</strong> en T3 con un único recálculo por pedido y un total <strong>0</strong> para un pedido cuyas líneas se eliminan. Estos valores corresponden a las validaciones definidas en los archivos del laboratorio.</p>
+<p><strong>Aprendizajes:</strong> Comprendí por qué Oracle protege la consistencia frente a tablas mutantes y cómo un trigger compuesto permite separar la recolección de cambios del procesamiento posterior a la sentencia.</p>
+<a class="file-card" href="evidencias/bases-de-datos-ii/plsql/LAB_TRIGGER_COMPUESTO.sql" download>
+  <div class="file-card-icon " style="background:rgba(155,114,207,.12);color:var(--violet)"><i class="fa-solid fa-code"></i></div>
+  <div class="file-card-info"><span class="file-card-name">Laboratorio · Trigger compuesto</span><span class="file-card-sub">Descargar script PL/SQL</span></div>
+</a>
+<a class="file-card" href="evidencias/bases-de-datos-ii/plsql/Laboratorio%20Trigger%20Compuesto.pptx" download>
+  <div class="file-card-icon " style="background:rgba(155,114,207,.12);color:var(--violet)"><i class="fa-solid fa-file-powerpoint"></i></div>
+  <div class="file-card-info"><span class="file-card-name">Presentación · Trigger compuesto</span><span class="file-card-sub">Descargar presentación PowerPoint</span></div>
+</a>
+ </div>
+</details>
+ </div>
+</details>
+                        <!-- NOSQL -->
+                        <details>
+ <summary><span>NoSQL</span><div class="summary-icon"><i class="fa-solid fa-plus"></i></div></summary>
+ <div class="detail-body">
+  <p>Estas evidencias muestran el trabajo con documentos NoSQL y consultas en MongoDB, desde operaciones CRUD hasta agregaciones sobre arreglos y campos anidados.</p>
+<details>
+ <summary><span>Taller MQL · sample_airbnb</span><div class="summary-icon"><i class="fa-solid fa-plus"></i></div></summary>
+ <div class="detail-body">
+  <p><strong>Objetivo:</strong> Aplicar consultas, inserciones, modificaciones y agregaciones de documentos con MongoDB Query Language (MQL).</p>
+<p><strong>Contexto:</strong> El taller utiliza la colección <strong>listingsAndReviews</strong> de <strong>sample_airbnb</strong> para consultar alojamientos, explorar campos anidados y trabajar con arreglos como <strong>amenities</strong>.</p>
+<p><strong>Desarrollo:</strong> El documento reúne <strong>30 ejercicios</strong>. Los primeros exploran <strong>insertOne</strong>, <strong>insertMany</strong>, filtros <strong>find</strong>, proyección y ordenamiento. Después se aplican <strong>updateOne</strong>, <strong>updateMany</strong>, <strong>upsert</strong> y operadores como <strong>$inc</strong>, <strong>$push</strong> y <strong>$pull</strong>. La parte final incluye <strong>$match</strong>, <strong>$group</strong>, <strong>$unwind</strong>, <strong>$bucket</strong> y un ejemplo teórico de <strong>$lookup</strong>.</p>
+<pre style="white-space:pre-wrap;overflow-wrap:anywhere;margin-top:14px;padding:14px 16px;border-radius:10px;background:var(--white);border:1px solid rgba(155,114,207,.22);color:var(--plum);font:0.78rem/1.6 'DM Mono',monospace"><code>db.getCollection(&quot;listingsAndReviews&quot;).aggregate([
+  { $unwind: &quot;$amenities&quot; },
+  { $group: { _id: &quot;$amenities&quot;, frecuencia: { $sum: 1 } } },
+  { $sort: { frecuencia: -1 } },
+  { $limit: 5 }
+]);</code></pre>
+<p><strong>Resultado registrado:</strong> Quedaron documentadas las sentencias para resolver los 30 enunciados, incluido el conteo de alojamientos por amenidad y los promedios por país. El archivo entregado no incorpora resultados de ejecución ni capturas verificables para todos los ejercicios.</p>
+<p><strong>Aprendizajes:</strong> Esta práctica me permitió comparar la consulta de documentos con la lógica de SQL relacional, especialmente al filtrar campos anidados, manipular arreglos y crear pipelines de agregación.</p>
+<a class="file-card" href="evidencias/bases-de-datos-ii/nosql/Taller%20MQL%20%E2%80%93%20MongoDB%20completado.pdf" target="_blank" rel="noopener noreferrer">
+  <div class="file-card-icon pdf" ><i class="fa-solid fa-file-pdf"></i></div>
+  <div class="file-card-info"><span class="file-card-name">Taller MQL · MongoDB (completado)</span><span class="file-card-sub">Abrir versión PDF</span></div>
+</a>
+<a class="file-card" href="evidencias/bases-de-datos-ii/nosql/Taller%20MQL%20%E2%80%93%20MongoDB%20completado%281%29.docx" download>
+  <div class="file-card-icon " style="background:rgba(155,114,207,.12);color:var(--violet)"><i class="fa-solid fa-file-word"></i></div>
+  <div class="file-card-info"><span class="file-card-name">Taller MQL · MongoDB (editable)</span><span class="file-card-sub">Descargar Word original</span></div>
+</a>
+ </div>
+</details>
+<details>
+ <summary><span>Scripts de ejemplo · MQL</span><div class="summary-icon"><i class="fa-solid fa-plus"></i></div></summary>
+ <div class="detail-body">
+  <p><strong>Objetivo:</strong> Revisar ejemplos de la sintaxis básica de MQL para inserciones, búsquedas y actualizaciones de documentos.</p>
+<p><strong>Contenido:</strong> Los archivos de ejemplo presentan <strong>insertOne</strong>, <strong>insertMany</strong>, <strong>updateOne</strong>, <strong>updateMany</strong> y consultas con operadores de comparación, condiciones, proyecciones y agregaciones. Están organizados en scripts independientes para facilitar su lectura.</p>
+<p><strong>Aprendizajes:</strong> Pude relacionar los operadores de consulta con operaciones de modificación y reconocer cómo los documentos permiten almacenar objetos y arreglos sin la misma estructura rígida de una tabla relacional.</p>
+<a class="file-card" href="evidencias/bases-de-datos-ii/nosql/scripts_ejemplo_MQL.zip" download>
+  <div class="file-card-icon " style="background:rgba(155,114,207,.12);color:var(--violet)"><i class="fa-solid fa-file-zipper"></i></div>
+  <div class="file-card-info"><span class="file-card-name">Paquete de ejemplos MQL</span><span class="file-card-sub">Descargar ZIP original</span></div>
+</a>
+<a class="file-card" href="evidencias/bases-de-datos-ii/nosql/scripts-mql/querys.mongodb" download>
+  <div class="file-card-icon " style="background:rgba(155,114,207,.12);color:var(--violet)"><i class="fa-solid fa-code"></i></div>
+  <div class="file-card-info"><span class="file-card-name">Consultas MQL</span><span class="file-card-sub">Descargar querys.mongodb</span></div>
+</a>
+<a class="file-card" href="evidencias/bases-de-datos-ii/nosql/scripts-mql/insertOne.mongodb" download>
+  <div class="file-card-icon " style="background:rgba(155,114,207,.12);color:var(--violet)"><i class="fa-solid fa-code"></i></div>
+  <div class="file-card-info"><span class="file-card-name">Inserciones · insertOne</span><span class="file-card-sub">Descargar script .mongodb</span></div>
+</a>
+<a class="file-card" href="evidencias/bases-de-datos-ii/nosql/scripts-mql/insertMany.mongodb" download>
+  <div class="file-card-icon " style="background:rgba(155,114,207,.12);color:var(--violet)"><i class="fa-solid fa-code"></i></div>
+  <div class="file-card-info"><span class="file-card-name">Inserciones · insertMany</span><span class="file-card-sub">Descargar script .mongodb</span></div>
+</a>
+<a class="file-card" href="evidencias/bases-de-datos-ii/nosql/scripts-mql/updateOne.mongodb" download>
+  <div class="file-card-icon " style="background:rgba(155,114,207,.12);color:var(--violet)"><i class="fa-solid fa-code"></i></div>
+  <div class="file-card-info"><span class="file-card-name">Actualizaciones · updateOne</span><span class="file-card-sub">Descargar script .mongodb</span></div>
+</a>
+<a class="file-card" href="evidencias/bases-de-datos-ii/nosql/scripts-mql/updateMany.mongodb" download>
+  <div class="file-card-icon " style="background:rgba(155,114,207,.12);color:var(--violet)"><i class="fa-solid fa-code"></i></div>
+  <div class="file-card-info"><span class="file-card-name">Actualizaciones · updateMany</span><span class="file-card-sub">Descargar script .mongodb</span></div>
+</a>
+ </div>
+</details>
+ </div>
+</details>
+                        <!-- PROYECTO FINAL -->
+                        <details>
+ <summary><span>Proyecto final</span><div class="summary-icon"><i class="fa-solid fa-plus"></i></div></summary>
+ <div class="detail-body">
+  <p><strong>RutaCar · Sistema de gestión de alquiler de vehículos.</strong> Como proyecto final de Bases de Datos II desarrollamos una aplicación orientada a gestionar vehículos, clientes, reservas, pagos e inspecciones. El caso permite integrar el diseño y la consulta de bases de datos con una aplicación web y reglas de negocio.</p>
+<p><strong>Contexto y solución:</strong> El sistema está dividido en una interfaz <strong>Angular</strong> y un servicio <strong>Spring Boot</strong> conectado a <strong>PostgreSQL</strong> y <strong>MongoDB</strong>. Los dos repositorios permiten revisar por separado la experiencia del usuario y la lógica de persistencia de datos.</p>
+<details>
+ <summary><span>Frontend · Angular</span><div class="summary-icon"><i class="fa-solid fa-plus"></i></div></summary>
+ <div class="detail-body">
+  <p><strong>Objetivo:</strong> Construir la interfaz del sistema para consultar vehículos y gestionar el flujo de alquileres.</p>
+<p><strong>Desarrollo:</strong> La aplicación utiliza <strong>Angular</strong>, <strong>TypeScript</strong>, HTML y CSS. El repositorio describe módulos de catálogo, reservas, pagos, clientes, inspecciones, flota y reportes, con rutas según el rol del usuario y comunicación mediante una API REST.</p>
+<p><strong>Resultado:</strong> El código fuente, la estructura de componentes y las instrucciones de ejecución están disponibles en el repositorio frontend.</p>
+<a class="link-btn" href="https://github.com/nmanriqueve-hue/FrontBD.git" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-github"></i> Repositorio Frontend</a>
+ </div>
+</details>
+<details>
+ <summary><span>Backend · Spring Boot y bases de datos</span><div class="summary-icon"><i class="fa-solid fa-plus"></i></div></summary>
+ <div class="detail-body">
+  <p><strong>Objetivo:</strong> Organizar la lógica de negocio y el acceso a los datos del sistema de alquiler de vehículos.</p>
+<p><strong>Desarrollo:</strong> El backend se implementa con <strong>Spring Boot</strong> y organiza scripts SQL en su carpeta <strong>database/</strong>. La arquitectura documentada para RutaCar integra <strong>PostgreSQL</strong> para operaciones relacionales y <strong>MongoDB</strong> para inspecciones y fotografías.</p>
+<p><strong>Resultado:</strong> El repositorio conserva el código del servidor y los archivos de base de datos asociados al proyecto.</p>
+<a class="link-btn" href="https://github.com/Acoss1x/alquiler-vehiculos-bd2.git" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-github"></i> Repositorio Backend</a>
+ </div>
+</details>
+<p><strong>Conclusión y aprendizajes:</strong> El proyecto relaciona los contenidos de la asignatura con un caso de uso completo: integridad de datos, manejo de reservas y reglas de negocio, consumo de servicios y separación de responsabilidades entre el cliente web y el servidor.</p>
+ </div>
+</details>
+                    </div>
+                </details>
+
+
+            </div>
+
+        </details>
+
+    </div>
+
+
+    <!-- FOOTER -->
+
+    <footer>
+
+        <div class="footer-name">
+            Nataly Manrique Vera
+        </div>
+
+        <div class="footer-role">
+            Ingeniería de Sistemas · Universidad El Bosque
+        </div>
+
+        <div class="footer-divider"></div>
+
+        <div class="footer-copy">
+            Contacto: nmanriqueve@unbosque.edu.co
+        </div>
+
+        <div class="footer-copy">
+            Bogotá-Colombia
+        </div>
+
+        <div class="footer-copy">
+            2026-2 · Todos los derechos reservados
+        </div>
+
+    </footer>
+
+
+    <!-- BOTÓN VOLVER ARRIBA -->
+
+    <button
+        class="scroll-top"
+        id="scrollTop"
+        onclick="window.scrollTo({top:0,behavior:'smooth'})"
+        aria-label="Volver arriba">
+
+        <i class="fa-solid fa-arrow-up"></i>
+
+    </button>
+
+
+    <!-- JAVASCRIPT -->
+
+    <script>
+
+        const nav =
+            document.getElementById('mainNav');
+
+
+        window.addEventListener(
+            'scroll',
+            () => {
+
+                nav.classList.toggle(
+                    'scrolled',
+                    window.scrollY > 20
+                );
+
+
+                document
+                    .getElementById('scrollTop')
+                    .classList.toggle(
+                        'visible',
+                        window.scrollY > 400
+                    );
+
+            }
+        );
+
+
+        function toggleMenu() {
+
+            document
+                .getElementById('navMenu')
+                .classList.toggle('open');
+
+        }
+
+
+        document
+            .querySelectorAll('#navMenu a')
+            .forEach(
+                a => {
+
+                    a.addEventListener(
+                        'click',
+                        () => {
+
+                            document
+                                .getElementById('navMenu')
+                                .classList.remove('open');
+
+                        }
+                    );
+
+                }
+            );
+
+
+        const reveals =
+            document.querySelectorAll('.reveal');
+
+
+        const observer =
+            new IntersectionObserver(
+
+                (entries) => {
+
+                    entries.forEach(
+                        (entry, i) => {
+
+                            if (
+                                entry.isIntersecting
+                            ) {
+
+                                setTimeout(
+                                    () =>
+                                        entry.target
+                                            .classList
+                                            .add('visible'),
+
+                                    i * 60
+                                );
+
+
+                                observer.unobserve(
+                                    entry.target
+                                );
+
+                            }
+
+                        }
+                    );
+
+                },
+
+                {
+                    threshold: 0.08
+                }
+
+            );
+
+
+        reveals.forEach(
+            el =>
+                observer.observe(el)
+        );
+
+    </script>
+
+</body>
+
+</html>

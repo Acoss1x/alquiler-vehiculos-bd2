@@ -1,0 +1,61 @@
+use ("db2_20242")
+
+db.nombreColeccion.insertMany([
+    { nombre: "Juan", edad: 30, ciudad: "Madrid" },
+    { nombre: "Ana", edad: 25, ciudad: "Barcelona" },
+    { nombre: "Carlos", edad: 28, ciudad: "Valencia" }
+  ]);
+  
+
+  db.nombreColeccion.insertMany([
+    {
+      nombre: "María",
+      edad: 32,
+      direccion: {
+        calle: "Calle A",
+        numero: 101
+      }
+    },
+    {
+      nombre: "Luis",
+      edad: 29,
+      direccion: {
+        calle: "Calle B",
+        numero: 202
+      }
+    }
+  ]);
+
+  
+  db.nombreColeccion.insertMany([
+    {
+      nombre: "Sofía",
+      edad: 26,
+      hobbies: ["música", "deportes"]
+    },
+    {
+      nombre: "Javier",
+      edad: 35,
+      hobbies: ["cocina", "viajar"]
+    }
+  ]);
+
+  
+  db.nombreColeccion.insertMany([
+    {
+      _id: ObjectId("60b8d55f4f1a2c001c8c8c8d"),
+      nombre: "Patricia",
+      edad: 31
+    },
+    {
+      _id: ObjectId("60b8d55f4f1a2c001c8c8c8e"),
+      nombre: "Fernando",
+      edad: 27
+    }
+  ]);
+
+  db.nombreColeccion.insertMany([
+    { _id: 1, nombre: "Teresa", edad: 30 },
+    { _id: 1, nombre: "Pablo", edad: 22 } // Esto causará un error
+  ], { ordered: false }); // `ordered: false` permite continuar insertando a pesar del error
+  
